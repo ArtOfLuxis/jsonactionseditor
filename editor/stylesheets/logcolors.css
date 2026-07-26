@@ -1,0 +1,19 @@
+.info {
+    color: white;
+}
+
+.notice {
+    color: #dde498;
+}
+
+.warn {
+    color: orange;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: lime;
+}

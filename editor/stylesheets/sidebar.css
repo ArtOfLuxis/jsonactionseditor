@@ -1,0 +1,91 @@
+
+#sidebar {
+    position: relative;
+    width: 520px;
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 10px;
+    box-sizing: border-box;
+
+    background: #252526;
+    color: white;
+    border-left: 1px solid #3c3c3c;
+    z-index: 100;
+}
+
+#sidebarResizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 100%;
+    cursor: ew-resize;
+    user-select: none;
+}
+
+.compileRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+#compileBtn {
+    padding: 8px 12px;
+    font-size: 16px;
+    background: #32aa30;
+    color: white;
+    cursor: pointer;
+    border: 3px solid #2e6b20;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+#compileBtn:hover {
+    background: #74c451;
+    border: 3px solid #31811f;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: white;
+    user-select: none;
+}
+
+h3 {
+    margin: 4px 0;
+}
+
+#log {
+    height: 180px;
+    overflow-y: auto;
+    padding: 4px;
+    margin-top: 3px;
+    background: #1e1e1e;
+    color: white;
+    border: 1px solid #3c3c3c;
+}
+
+.buttonRow {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 5px;
+}
+
+.buttonRow button {
+    flex: 1;
+    background: #48a830;
+    color: white;
+    cursor: pointer;
+    border: 3px solid #2e6b20;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.buttonRow button:hover {
+    background: #89ce5e;
+    border: 3px solid #31811f;
+}

@@ -1,0 +1,125 @@
+@import "logcolors.css";
+@import "checkbox.css";
+@import "output.css";
+@import "sidebar.css";
+@import "fieldeditors.css";
+@import "pages.css";
+@import "modaloverlay.css";
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background: #1e1e1e;
+    color: white;
+
+    font-family: sans-serif;
+}
+
+#container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#blocklyContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    position: relative;
+}
+
+#toolboxSearchContainer {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 5;
+}
+
+#toolboxSearch {
+    width: 100%;
+    box-sizing: border-box;
+    background: #252526;
+    color: white;
+    border: 1px solid #3c3c3c;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+#toolboxSearch::placeholder {
+    color: #888;
+    opacity: 1;
+}
+
+.blocklyToolboxCategoryGroup {
+    display: flex;
+    flex-direction: column;
+    margin-top: 36px;
+}
+
+.blocklyToolbox {
+    z-index: 4;
+}
+
+#blocklyDiv {
+    flex: 1;
+    min-height: 0;
+}
+
+pre {
+    margin: 0;
+}
+
+.blocklyDropDownDiv {
+    color: white;
+    background-color: #8a77c2;
+    border: 1px solid #3c3c3c;
+    border-radius: 2px;
+    box-shadow: none;
+    width: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.blocklyDropDownContent {
+    color: white;
+    background-color: #7955b6;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.blocklyMenuItem {
+    color: white !important;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.blocklyMenuItemContent {
+    color: white !important;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.blocklyContextMenu {
+    background: #252526 !important;
+    color: white !important;
+}
+
+.blocklyMenu {
+    background: #252526 !important;
+    border: 1px solid #3c3c3c !important;
+}
+
+.blocklyShadow {
+    opacity: 0.9;
+}
+
+.blocklyShadow .blocklyPath {
+    fill-opacity: 0.9;
+    filter: hue-rotate(30deg);
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON Actions Editor</title>
+
+    <link rel="stylesheet" href="stylesheets/style.css">
+
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
+    <script src="https://unpkg.com/json5/dist/index.min.js"></script>
+</head>
+<body>
+
+
+<div id="container">
+    <div id="blocklyContainer">
+        <div id="pages"></div>
+
+        <div id="toolboxSearchContainer">
+            <label for="toolboxSearch"></label>
+            <input id="toolboxSearch" type="search" placeholder="Search...">
+        </div>
+
+        <div id="pageBar">
+            <button id="addPageBtn">+</button>
+            <div id="pageTabs"></div>
+        </div>
+    </div>
+
+    <div id="sidebar">
+        <div id="sidebarResizer"></div>
+
+        <div class="compileRow">
+            <button id="compileBtn">Compile</button>
+
+            <label class="checkboxLabel">
+                <input type="checkbox" id="optimizeCheckbox" checked="checked">
+                Optimize
+            </label>
+
+            <label class="checkboxLabel">
+                <input type="checkbox" id="saveCheckbox">
+                Save
+            </label>
+
+            <label class="checkboxLabel">
+                <input type="checkbox" id="clearLogCheckbox">
+                Clear Log
+            </label>
+        </div>
+
+        <div class="buttonRow">
+            <button id="exportBtn">Export</button>
+            <button id="importBtn">Import</button>
+        </div>
+
+        <div class="buttonRow">
+            <button id="copyJsonBtn">Copy JSON</button>
+        </div>
+
+<!--        <div class="buttonRow">-->
+<!--            <button id="exportProjectBtn">Export Project</button>-->
+<!--            <button id="exportWorkspaceBtn">Export Workspace</button>-->
+<!--            <button id="exportJsonBtn">Export JSON</button>-->
+<!--            <button id="exportOptimizedJsonBtn">Export Optimized JSON</button>-->
+<!--            <button id="exportAutosaveBtn">Export Last Autosave</button>-->
+<!--            <button id="copyJsonBtn">Copy JSON</button>-->
+<!--        </div>-->
+
+<!--        <div class="buttonRow">-->
+<!--            <button id="importProjectBtn">Import Project</button>-->
+<!--            <button id="importWorkspaceBtn">Import Workspace</button>-->
+<!--            <button id="importJsonBtn">Import JSON</button>-->
+<!--            <button id="pasteJsonBtn">Paste JSON</button>-->
+<!--        </div>-->
+
+        <h3>JSON</h3>
+        <pre id="output"><code class="language-json"></code></pre>
+
+        <h3>Log</h3>
+        <div id="log"></div>
+    </div>
+</div>
+
+
+<input
+        type="file"
+        id="importWorkspaceFile"
+        accept=".jaw"
+        style="display:none"
+>
+
+<input
+        type="file"
+        id="importJsonFile"
+        accept=".json"
+        style="display:none"
+>
+
+<input
+        type="file"
+        id="importProjectFile"
+        accept=".jap"
+        style="display:none"
+>
+
+<div id="modalOverlay" class="hidden">
+    <div id="modal">
+        <h2 id="modalTitle"></h2>
+
+        <p id="modalMessage"></p>
+
+        <div id="modalButtons" class="modalButtons"></div>
+
+        <button id="modalClose">Close</button>
+    </div>
+</div>
+
+<script src="js/fields/FieldMultilineJson.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/copypaste.js"></script>
+<script src="js/saving.js"></script>
+<script src="js/blocks.js"></script>
+<script src="js/mutators.js"></script>
+<script src="js/decompiler.js"></script>
+<script src="js/compiler.js"></script>
+<script src="js/logger.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/search.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
