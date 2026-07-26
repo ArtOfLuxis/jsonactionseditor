@@ -123,3 +123,9 @@ pre {
     fill-opacity: 0.9;
     filter: hue-rotate(30deg);
 }
+
+.blocklyText {
+    font-family: "Comic Sans MS", "Comic Sans", sans-serif;
+    font-size: 14pt;
+    font-weight: normal;
+}

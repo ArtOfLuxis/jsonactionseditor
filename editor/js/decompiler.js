@@ -15,9 +15,15 @@ function createBlockFromJson(data, workspace) {
         case "If":
             block = newBlock("if_statement", workspace)
 
+            block.hasElse_ = isNotNull(data.else)
+            block.updateShape_()
+
             createValueInput(block, "condition", data.condition)
             createStatementInput(block, "then", data.then)
-            createStatementInput(block, "else", data.else)
+
+            if (block.hasElse_) {
+                createStatementInput(block, "else", data.else)
+            }
             break
 
 
@@ -226,9 +232,15 @@ function createValueBlock(value, workspace) {
             case "Ternary": {
                 const block = newBlock("ternary_expression", workspace)
 
+                block.hasElse_ = isNotNull(value.else)
+                block.updateShape_()
+
                 createValueInput(block, "condition", value.condition)
                 createValueInput(block, "then", value.then)
-                createValueInput(block, "else", value.else)
+
+                if (block.hasElse_) {
+                    createValueInput(block, "else", value.else)
+                }
 
                 return block
             }

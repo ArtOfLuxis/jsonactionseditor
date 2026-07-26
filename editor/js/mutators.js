@@ -539,3 +539,126 @@ Blockly.Extensions.registerMutator(
         ([, value]) => `explode_cherry_bomb_mutator_item_${value}`
     )
 )
+
+Blockly.defineBlocksWithJsonArray([
+    {
+        type: "optional_else_mutator_container",
+        message0: "Include Else %1",
+        args0: [
+            {
+                type: "field_checkbox",
+                name: "ELSE",
+                checked: true
+            }
+        ],
+        colour: "#554f92"
+    }
+])
+
+Blockly.Extensions.registerMutator("optional_else_mutator", {
+    hasElse_: true,
+
+    saveExtraState() {
+        return {
+            hasElse: this.hasElse_
+        }
+    },
+
+    loadExtraState(state) {
+        this.hasElse_ = state?.hasElse ?? true
+        this.updateShape_()
+    },
+
+    decompose(workspace) {
+        const container = workspace.newBlock("optional_else_mutator_container")
+        container.initSvg()
+
+        container.setFieldValue(
+            this.hasElse_ ? "TRUE" : "FALSE",
+            "ELSE"
+        )
+
+        return container
+    },
+
+    compose(container) {
+        this.hasElse_ =
+            container.getFieldValue("ELSE") === "TRUE"
+
+        this.updateShape_()
+    },
+
+    updateShape_() {
+        const input = this.getInput("else")
+
+        if (this.hasElse_) {
+            if (!input) {
+                this.appendStatementInput("else")
+                    .appendField("else")
+            }
+        } else if (input) {
+            const connection = input.connection.targetConnection
+
+            if (connection) {
+                connection.disconnect()
+                connection.getSourceBlock().bumpNeighbours()
+            }
+
+            this.removeInput("else")
+        }
+    }
+})
+
+Blockly.Extensions.registerMutator("optional_else_mutator_ternary", {
+    hasElse_: true,
+
+    saveExtraState() {
+        return {
+            hasElse: this.hasElse_
+        }
+    },
+
+    loadExtraState(state) {
+        this.hasElse_ = state?.hasElse ?? true
+        this.updateShape_()
+    },
+
+    decompose(workspace) {
+        const container = workspace.newBlock("optional_else_mutator_container")
+        container.initSvg()
+
+        container.setFieldValue(
+            this.hasElse_ ? "TRUE" : "FALSE",
+            "ELSE"
+        )
+
+        return container
+    },
+
+    compose(container) {
+        this.hasElse_ =
+            container.getFieldValue("ELSE") === "TRUE"
+
+        this.updateShape_()
+    },
+
+    updateShape_() {
+        const input = this.getInput("else")
+
+        if (this.hasElse_) {
+            if (!input) {
+                this.appendValueInput("else")
+                    .appendField("else")
+            }
+        } else if (input) {
+            const connection = input.connection.targetConnection
+
+            if (connection) {
+                connection.disconnect()
+                connection.getSourceBlock().bumpNeighbours()
+            }
+
+            this.removeInput("else")
+        }
+    }
+})

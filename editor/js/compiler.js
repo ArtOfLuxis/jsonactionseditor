@@ -136,7 +136,7 @@ function compileWorkspaceChains(workspace) {
 
     let found = false
     for (const topBlock of topBlocks) {
-        if (topBlock.type !== "start_block") {
+        if (topBlock.type !== "start_block" || !topBlock.isEnabled()) {
             continue
         }
 

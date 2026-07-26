@@ -33,13 +33,7 @@ const blockDefinitions = [
                 name: "then"
             }
         ],
-        message2: "else %1",
-        args2: [
-            {
-                type: "input_statement",
-                name: "else"
-            }
-        ],
+        mutator: "optional_else_mutator",
         previousStatement: null,
         nextStatement: null,
         colour: "#e89e37"
@@ -64,14 +58,7 @@ const blockDefinitions = [
                 check: null
             }
         ],
-        message2: "else %1",
-        args2: [
-            {
-                type: "input_value",
-                name: "else",
-                check: null
-            }
-        ],
+        mutator: "optional_else_mutator_ternary",
         output: "Any",
         colour: "#e89e37"
     },
