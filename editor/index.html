@@ -39,20 +39,22 @@
         <div class="compileRow">
             <button id="compileBtn">Compile</button>
 
-            <label class="checkboxLabel">
-                <input type="checkbox" id="optimizeCheckbox" checked="checked">
+            <label class="checkboxLabel optimizeLabel">
+                <input type="checkbox" id="optimizeCheckbox" checked>
                 Optimize
             </label>
 
-            <label class="checkboxLabel">
-                <input type="checkbox" id="saveCheckbox">
-                Save
-            </label>
+            <div class="checkboxRow">
+                <label class="checkboxLabel">
+                    <input type="checkbox" id="saveCheckbox">
+                    Save
+                </label>
 
-            <label class="checkboxLabel">
-                <input type="checkbox" id="clearLogCheckbox">
-                Clear Log
-            </label>
+                <label class="checkboxLabel">
+                    <input type="checkbox" id="clearLogCheckbox">
+                    Clear Log
+                </label>
+            </div>
         </div>
 
         <div class="buttonRow">
@@ -121,6 +123,8 @@
         <button id="modalClose">Close</button>
     </div>
 </div>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="js/fields/FieldMultilineJson.js"></script>
 <script src="js/modal.js"></script>

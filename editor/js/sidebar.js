@@ -174,6 +174,7 @@ resizer.addEventListener("mousedown", event => {
 });
 
 document.addEventListener("mousemove", event => {
+    if (window.innerWidth <= 900) return;
     if (!resizing) return
 
     const width = Math.min(900, Math.max(420, window.innerWidth - event.clientX))

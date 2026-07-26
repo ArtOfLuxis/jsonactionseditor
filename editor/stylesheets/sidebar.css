@@ -40,7 +40,7 @@
     color: white;
     cursor: pointer;
     border: 3px solid #2e6b20;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-family: "Comic Sans MS", "Comic Sans", sans-serif;
 }
 
 #compileBtn:hover {
@@ -82,10 +82,76 @@ h3 {
     color: white;
     cursor: pointer;
     border: 3px solid #2e6b20;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-family: "Comic Sans MS", "Comic Sans", sans-serif;
 }
 
 .buttonRow button:hover {
     background: #89ce5e;
     border: 3px solid #31811f;
+}
+
+/* try to make ui mobile friendly */
+@media (max-width: 900px) {
+    #sidebar {
+        position: fixed;
+        right: 4px;
+        bottom: 4px;
+
+        width: 160px;
+        height: 300px;
+
+        border: 1px solid #3c3c3c;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px #0008;
+
+        z-index: 1000;
+        padding: 6px;
+    }
+
+    #output,
+    #sidebar h3:first-of-type {
+        display: none;
+    }
+
+    #sidebarResizer {
+        display: none;
+    }
+
+    .compileRow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+        align-items: center;
+    }
+
+    #compileBtn {
+        width: 100%;
+    }
+
+    .checkboxLabel {
+        justify-content: center;
+        font-size: 10px;
+    }
+
+    .checkboxRow {
+        display: contents;
+    }
+
+    #compileBtn,
+    .buttonRow button {
+        padding: 4px 6px;
+        font-size: 12px;
+        border-width: 2px;
+    }
+
+    #log {
+        flex: 1;
+        height: auto;
+        font-size: 10px;
+    }
+
+    .checkboxLabel {
+        font-size: 10px;
+        gap: 2px;
+    }
 }

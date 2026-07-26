@@ -35,7 +35,7 @@
     color: white;
     cursor: pointer;
     border: 3px solid #5c4fea;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-family: "Comic Sans MS", "Comic Sans", sans-serif;
 }
 
 #modalButtons button {
@@ -44,7 +44,7 @@
     color: white;
     cursor: pointer;
     border: 3px solid #2e6b20;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-family: "Comic Sans MS", "Comic Sans", sans-serif;
 }
 
 .modalButtons {

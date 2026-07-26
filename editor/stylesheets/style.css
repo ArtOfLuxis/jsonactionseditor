@@ -46,7 +46,7 @@ html, body {
     background: #252526;
     color: white;
     border: 1px solid #3c3c3c;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-family: "Comic Sans MS", "Comic Sans", sans-serif;
 }
 
 #toolboxSearch::placeholder {
@@ -97,12 +97,12 @@ pre {
 
 .blocklyMenuItem {
     color: white !important;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-family: "Comic Sans MS", "Comic Sans", sans-serif;
 }
 
 .blocklyMenuItemContent {
     color: white !important;
-    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-family: "Comic Sans MS", "Comic Sans", sans-serif;
 }
 
 .blocklyContextMenu {
