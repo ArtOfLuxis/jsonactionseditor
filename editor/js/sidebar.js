@@ -176,7 +176,7 @@ resizer.addEventListener("mousedown", event => {
 document.addEventListener("mousemove", event => {
     if (!resizing) return
 
-    const width = Math.min(900, Math.max(520, window.innerWidth - event.clientX))
+    const width = Math.min(900, Math.max(420, window.innerWidth - event.clientX))
     sidebar.style.width = `${width}px`
 
     Blockly.svgResize(currentPage)

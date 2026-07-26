@@ -1,7 +1,7 @@
 
 #sidebar {
     position: relative;
-    width: 520px;
+    width: 420px;
     flex-shrink: 0;
 
     display: flex;
