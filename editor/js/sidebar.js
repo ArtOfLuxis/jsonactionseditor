@@ -116,9 +116,18 @@ importJsonFile.onchange = async (e) => {
 
         let x = 100
 
-        for (const chain of chains) {
+        for (const {name, chain} of chains) {
             let first = null
             let previous = null
+
+            if (name) {
+                const start = newBlock("start_block", currentPage)
+                start.setFieldValue(name, "name")
+                start.render()
+
+                first = start
+                previous = start
+            }
 
             for (const action of chain) {
                 const block = createBlockFromJson(action, currentPage)
@@ -178,10 +187,13 @@ document.addEventListener("mouseup", event => {
 })
 
 const copyJson = async () => {
-    const text = JSON.stringify(
-        JSON5.parse(`[${output.textContent}]`),
-        null, 2
-    )
+    const json = JSON5.parse(output.textContent)
+
+    const text = Object.entries(json)
+        .map(([name, actions]) =>
+            `${JSON.stringify(name)}: ${JSON.stringify(actions, null, 2)}`
+        )
+        .join(",\n")
 
     await navigator.clipboard.writeText(text)
 
@@ -191,20 +203,36 @@ document.getElementById("copyJsonBtn").onclick = copyJson
 
 const pasteJson = async () => {
     try {
-        const text = await navigator.clipboard.readText()
+        let text = (await navigator.clipboard.readText()).trim()
+
+        if (!text.startsWith("{")) {
+            text = `{${text}`
+        }
+        if (!text.endsWith("{")) {
+            text = `${text}}`
+        }
+
+        const json = JSON5.parse(text)
 
         if (!await showConfirm("Import JSON from clipboard? It will be pasted on top, without clearing the page")) {
             return
         }
-
-        const json = JSON5.parse(text)
         const chains = normalizeJsonChains(json)
 
         let x = 100
 
-        for (const chain of chains) {
-            let firstBlock = null
-            let previousBlock = null
+        for (const {name, chain} of chains) {
+            let first = null
+            let previous = null
+
+            if (name) {
+                const start = newBlock("start_block", currentPage)
+                start.setFieldValue(name, "name")
+                start.render()
+
+                first = start
+                previous = start
+            }
 
             for (const action of chain) {
                 const block = createBlockFromJson(action, currentPage)
@@ -212,22 +240,20 @@ const pasteJson = async () => {
 
                 block.render()
 
-                if (!firstBlock) {
-                    firstBlock = block
+                if (!first) {
+                    first = block
                 }
 
-                if (previousBlock) {
-                    previousBlock.nextConnection.connect(
-                        block.previousConnection
-                    )
+                if (previous) {
+                    previous.nextConnection.connect(block.previousConnection)
                 }
 
-                previousBlock = block
+                previous = block
             }
 
-            if (firstBlock) {
-                firstBlock.moveBy(x, 100)
-                x += firstBlock.getHeightWidth().width + 80
+            if (first) {
+                first.moveBy(x, 100)
+                x += first.getHeightWidth().width + 80
             }
         }
 
@@ -333,17 +359,12 @@ const importAutosave = async () => {
 }
 
 function normalizeJsonChains(json) {
-    if (!Array.isArray(json)) {
-        return [[json]]
-    }
-
-    if (json.length === 0) {
+    if (!json || typeof json !== "object" || Array.isArray(json)) {
         return []
     }
 
-    if (Array.isArray(json[0])) {
-        return json
-    }
-
-    return [json]
+    return Object.entries(json).map(([name, chain]) => ({
+        name,
+        chain: Array.isArray(chain) ? chain : [chain]
+    }))
 }

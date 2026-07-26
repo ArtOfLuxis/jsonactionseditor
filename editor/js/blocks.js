@@ -225,6 +225,21 @@ const blockDefinitions = [
 
     // Other
     {
+        type: "start_block",
+        category: "Other",
+        search_tags: [],
+        message0: "Start %1",
+        args0: [
+            {
+                type: "field_input",
+                name: "name"
+            }
+        ],
+        inputsInline: true,
+        nextStatement: null,
+        colour: "#5cc03f"
+    },
+    {
         type: "console_log",
         category: "Other",
         search_tags: ["logger", "print"],

@@ -6,8 +6,11 @@ function isNotNull(value) {
 const output = document.querySelector("#output code")
 
 let shouldOptimize = false
+let inlineVariables = new Map()
 
 document.getElementById("compileBtn").onclick = () => {
+    inlineVariables = new Map()
+
     const shouldClearLog = document.getElementById("clearLogCheckbox").checked
     if (shouldClearLog) clearLog()
     const shouldSave = document.getElementById("saveCheckbox").checked
@@ -26,17 +29,7 @@ document.getElementById("compileBtn").onclick = () => {
 
         const time = ((performance.now() - start) / 1000).toFixed(3)
 
-        let formatted
-
-        if (json.length === 1) {
-            formatted = json[0]
-                .map(entry => JSON.stringify(entry, null, 2))
-                .join(",\n")
-        } else {
-            formatted = json
-                .map(chain => JSON.stringify(chain, null, 2))
-                .join(",\n")
-        }
+        const formatted = JSON.stringify(json, null, 2)
 
         pageOutputs.set(currentPage, formatted)
 
@@ -49,8 +42,6 @@ document.getElementById("compileBtn").onclick = () => {
         logger(`Error encountered: ${e}`, "error")
     }
 }
-
-const inlineVariables = new Map()
 
 function removeJSONActionNulls(value) {
     if (value === null || typeof value !== "object") return
@@ -130,41 +121,8 @@ function compressActions(actions) {
     return result
 }
 
-function compileWorkspace(workspace) {
-    const actions = []
-
-    const topBlocks = workspace.getTopBlocks(true)
-
-    const pushAction = (action, actionsList) => {
-        if (Array.isArray(action)) {
-            action.forEach(item => pushAction(item, actionsList))
-        } else if (typeof action === "object" && typeof action?.kind === "string") {
-            actionsList.push(action)
-        }
-    }
-
-    for (const topBlock of topBlocks) {
-        if (!topBlock.previousConnection) {
-            continue // skip value blocks
-        }
-
-        let block = topBlock
-
-        while (block) {
-            if (block.isEnabled()) {
-                const action = compile(block)
-                pushAction(action, actions)
-            }
-
-            block = block.getNextBlock()
-        }
-    }
-
-    return compressActions(actions)
-}
-
 function compileWorkspaceChains(workspace) {
-    const chains = []
+    const chains = {}
 
     const topBlocks = workspace.getTopBlocks(true)
 
@@ -176,12 +134,27 @@ function compileWorkspaceChains(workspace) {
         }
     }
 
+    let found = false
     for (const topBlock of topBlocks) {
-        if (!topBlock.previousConnection) continue
+        if (topBlock.type !== "start_block") {
+            continue
+        }
+
+        const name = topBlock.getFieldValue("name")?.trim()
+
+        if (!name) {
+            logger("Found Start block with no name.", "warn")
+            continue
+        }
+
+        found = true
+
+        if (chains[name]) {
+            logger(`Duplicate Start block "${name}".`, "warn")
+        }
 
         let chain = []
-
-        let block = topBlock
+        let block = topBlock.getNextBlock()
 
         while (block) {
             if (block.isEnabled()) {
@@ -191,12 +164,10 @@ function compileWorkspaceChains(workspace) {
             block = block.getNextBlock()
         }
 
-        chain = compressActions(chain)
-
-        if (chain.length) {
-            chains.push(chain)
-        }
+        chains[name] = compressActions(chain)
     }
+
+    if (!found) logger("Couldn't find a valid Start block", "error")
 
     return chains
 }
