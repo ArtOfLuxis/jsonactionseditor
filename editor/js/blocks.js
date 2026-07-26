@@ -599,7 +599,7 @@ const blockDefinitions = [
         ],
         inputsInline: false,
         output: "Rectangle",
-        colour: "#dcbc75"
+        colour: "#cbab5f"
     },
     {
         type: "plant_body_rectangle",
@@ -615,7 +615,7 @@ const blockDefinitions = [
         ],
         inputsInline: false,
         output: "Rectangle",
-        colour: "#92dc75"
+        colour: "#76b95c"
     },
     {
         type: "projectile_body_rectangle",
@@ -631,7 +631,7 @@ const blockDefinitions = [
         ],
         inputsInline: false,
         output: "Rectangle",
-        colour: "#75dcba"
+        colour: "#67c9a9"
     },
 
 
