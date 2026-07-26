@@ -275,6 +275,9 @@ function createValueBlock(value, workspace) {
 
                 return block
             }
+            case "GetContext": {
+                return newBlock("context", workspace)
+            }
             case "GetObjectProperty": {
                 const block = newBlock("get_object_property", workspace)
 
