@@ -17,6 +17,8 @@ const shadowProperties = {
             "get_object_property",
             "modify_object_property",
             "invoke_constructor",
+            "invoke_object_method_statement",
+            "invoke_object_method_expression",
             "sleep"
         ]
     },
@@ -26,6 +28,10 @@ const shadowProperties = {
             "set_object_properties",
             "get_object_property",
             "modify_object_property"
+        ],
+        "method": [
+            "invoke_object_method_statement",
+            "invoke_object_method_expression",
         ],
         "variable": [
             "for_loop"
@@ -294,6 +300,7 @@ function createPage() {
     switchPage(id)
 
     Blockly.svgResize(workspace)
+    positionSearch()
 
     return workspace
 }

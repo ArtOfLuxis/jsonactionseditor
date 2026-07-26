@@ -105,4 +105,6 @@ function deserializeProject(project) {
     if (firstId) {
         switchPage(firstId)
     }
+
+    positionSearch()
 }
