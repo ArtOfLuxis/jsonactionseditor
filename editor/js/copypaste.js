@@ -1,6 +1,14 @@
 
 let copiedBlockState = null
 
+let mouseX = 0
+let mouseY = 0
+
+document.addEventListener("mousemove", e => {
+    mouseX = e.clientX
+    mouseY = e.clientY
+})
+
 const registry = Blockly.ShortcutRegistry.registry
 
 registry.unregister(Blockly.ShortcutItems.names.COPY)
@@ -15,6 +23,7 @@ registry.register({
         if (!block) return false
 
         copiedBlockState = Blockly.serialization.blocks.save(block)
+
         return true
     },
     keyCodes: [
@@ -37,6 +46,7 @@ registry.register({
 
         copiedBlockState = Blockly.serialization.blocks.save(block)
         block.checkAndDelete()
+
         return true
     },
     keyCodes: [
@@ -53,13 +63,17 @@ registry.register({
     callback: () => {
         if (!copiedBlockState || !currentPage) return false
 
-        const newBlock = Blockly.serialization.blocks.append(
-            copiedBlockState,
-            currentPage
-        )
+        const metrics = currentPage.getMetrics()
+        const scale = currentPage.scale
 
-        newBlock.moveBy(20, 20)
+        const x = (mouseX - metrics.absoluteLeft) / scale + metrics.viewLeft
+        const y = (mouseY - metrics.absoluteTop) / scale + metrics.viewTop
 
+        const state = structuredClone(copiedBlockState)
+        state.x = x
+        state.y = y
+
+        const newBlock = Blockly.serialization.blocks.append(state, currentPage)
         Blockly.common.setSelected(newBlock)
 
         return true

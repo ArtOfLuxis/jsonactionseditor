@@ -498,6 +498,50 @@ const blockDefinitions = [
 
     // Gameplay
     {
+        type: "deal_damage_zombie",
+        category: "Gameplay",
+        search_tags: [],
+        message0: "Deal Damage to a Zombie\n Damage Details %1 Zombie %2",
+        args0: [
+            {
+                type: "input_value",
+                name: "damageDetails",
+                check: ["DamageDetails", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "zombie",
+                check: null
+            },
+        ],
+        inputsInline: false,
+        previousStatement: null,
+        nextStatement: null,
+        colour: "#ca784b"
+    },
+    {
+        type: "deal_damage_plant",
+        category: "Gameplay",
+        search_tags: [],
+        message0: "Deal Damage to a Plant\n Damage %1 Plant %2",
+        args0: [
+            {
+                type: "input_value",
+                name: "damage",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "plant",
+                check: null
+            },
+        ],
+        inputsInline: false,
+        previousStatement: null,
+        nextStatement: null,
+        colour: "#66a536"
+    },
+    {
         type: "explode_cherry_bomb",
         category: "Gameplay",
         search_tags: ["explosion"],
@@ -519,6 +563,75 @@ const blockDefinitions = [
         previousStatement: null,
         nextStatement: null,
         colour: "#e33b3b"
+    },
+    {
+        type: "rectangle_intersects_rectangle",
+        category: "Gameplay",
+        search_tags: [],
+        message0: "Rectangle Intersects Rectangle\nRectangle 1 %1 Rectangle 2 %2",
+        args0: [
+            {
+                type: "input_value",
+                name: "rectangle1",
+                check: ["Rectangle", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "rectangle2",
+                check: ["Rectangle", "Any"]
+            },
+        ],
+        inputsInline: false,
+        output: "Boolean",
+        colour: "#37a05e"
+    },
+    {
+        type: "zombie_body_rectangle",
+        category: "Gameplay",
+        search_tags: [],
+        message0: "Zombie Body Rectangle %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "zombie",
+                check: null
+            },
+        ],
+        inputsInline: false,
+        output: "Rectangle",
+        colour: "#dcbc75"
+    },
+    {
+        type: "plant_body_rectangle",
+        category: "Gameplay",
+        search_tags: [],
+        message0: "Plant Body Rectangle %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "plant",
+                check: null
+            },
+        ],
+        inputsInline: false,
+        output: "Rectangle",
+        colour: "#92dc75"
+    },
+    {
+        type: "projectile_body_rectangle",
+        category: "Gameplay",
+        search_tags: [],
+        message0: "Projectile Body Rectangle %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "projectile",
+                check: null
+            },
+        ],
+        inputsInline: false,
+        output: "Rectangle",
+        colour: "#75dcba"
     },
 
 
@@ -745,7 +858,7 @@ const blockDefinitions = [
         type: "rectangle",
         category: "Types",
         search_tags: ["hitbox"],
-        message0: "Rectangle \nWidth %1 \nHeight %2\nCenter Node %3",
+        message0: "Rectangle \nWidth %1 \nHeight %2\nX Offset %3\nY Offset %4\nCenter Node %5",
         args0: [
             {
                 type: "input_value",
@@ -755,6 +868,16 @@ const blockDefinitions = [
             {
                 type: "input_value",
                 name: "height",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "xOffset",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "yOffset",
                 check: ["Number", "Any"]
             },
             {
@@ -819,6 +942,63 @@ const blockDefinitions = [
         inputsInline: true,
         output: "Color",
         colour: "#cd0dcd"
+    },
+    {
+        type: "zombie_damage_details",
+        category: "Types",
+        search_tags: [],
+        message0: "Zombie Damage Details\n Damage %1 Damage Type %2\n Armor Protection %3 Armor Knock Sound %4 Body Knock Sound %5 Flash %6 Always Damage Armor %7 Damage Direction %8",
+        args0: [
+            {
+                type: "input_value",
+                name: "damage",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "field_dropdown",
+                name: "damageType",
+                options: [
+                    ["Physical", "physicle"],
+                    ["Fire", "fire"],
+                    ["Ray", "ray"],
+                    ["Electricity", "electricity"],
+                    ["Potato Mine", "potatoMine"],
+                ]
+            },
+            {
+                type: "input_value",
+                name: "armorProtection",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "armorKnockSound",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "bodyKnockSound",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "flash",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "armorAlsoDamagedWhenNotProtecting",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "damageDirection",
+                check: ["Vec2", "Any"]
+            },
+        ],
+        inputsInline: false,
+        output: "DamageDetails",
+        colour: "#6dbb31"
     },
     {
         type: "plain_json_object",

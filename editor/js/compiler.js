@@ -470,6 +470,26 @@ function compile(block) {
             }
 
             // Gameplay
+            case "deal_damage_zombie": {
+                const zombie = compile(block.getInputTargetBlock("zombie"))
+                const damageDetails = compile(block.getInputTargetBlock("damageDetails"))
+
+                return {
+                    kind: "DealDamageZombie",
+                    zombie,
+                    damageDetails
+                }
+            }
+            case "deal_damage_plant": {
+                const plant = compile(block.getInputTargetBlock("plant"))
+                const damage = compile(block.getInputTargetBlock("damage"))
+
+                return {
+                    kind: "DealDamagePlant",
+                    plant,
+                    damage
+                }
+            }
             case "explode_cherry_bomb": {
                 const showExplosionText = block.getFieldValue("showExplosionText")
                 return {
@@ -493,6 +513,34 @@ function compile(block) {
                     playSound: compile(block.getInputTargetBlock("playSound"))
                 }
             }
+            case "rectangle_intersects_rectangle": {
+                const rectangle1 = compile(block.getInputTargetBlock("rectangle1"))
+                const rectangle2 = compile(block.getInputTargetBlock("rectangle2"))
+
+                return {
+                    kind: "RectangleIntersectsRectangle",
+                    rectangle1,
+                    rectangle2
+                }
+            }
+            case "zombie_body_rectangle":
+                return {
+                    kind: "ZombieBodyRectangle",
+                    zombie: compile(block.getInputTargetBlock("zombie")),
+                    rectangleForProjectiles: compile(
+                        block.getInputTargetBlock("rectangleForProjectiles")
+                    )
+                }
+            case "plant_body_rectangle":
+                return {
+                    kind: "PlantBodyRectangle",
+                    plant: compile(block.getInputTargetBlock("plant"))
+                }
+            case "projectile_body_rectangle":
+                return {
+                    kind: "ProjectileBodyRectangle",
+                    projectile: compile(block.getInputTargetBlock("projectile"))
+                }
 
             // Advanced
             case "invoke_constructor": {
@@ -577,8 +625,24 @@ function compile(block) {
                 return {
                     kind: "CreateRectangle",
                     width: compile(block.getInputTargetBlock("width")),
-                    heigth: compile(block.getInputTargetBlock("heigth")),
+                    height: compile(block.getInputTargetBlock("height")),
+                    xOffset: compile(block.getInputTargetBlock("xOffset")),
+                    yOffset: compile(block.getInputTargetBlock("yOffset")),
                     node: compile(block.getInputTargetBlock("node")),
+                }
+            case "zombie_damage_details":
+                return {
+                    kind: "CreateDamageDetails",
+                    damage: compile(block.getInputTargetBlock("damage")),
+                    armorProtection: compile(block.getInputTargetBlock("armorProtection")),
+                    armorKnockSound: compile(block.getInputTargetBlock("armorKnockSound")),
+                    bodyKnockSound: compile(block.getInputTargetBlock("bodyKnockSound")),
+                    damageDirection: compile(block.getInputTargetBlock("damageDirection")),
+                    damageType: block.getFieldValue("damageType"),
+                    flash: compile(block.getInputTargetBlock("flash")),
+                    armorAlsoDamagedWhenNotProtecting: compile(
+                        block.getInputTargetBlock("armorAlsoDamagedWhenNotProtecting")
+                    )
                 }
             case "color": {
                 const hex = block.getFieldValue("color")

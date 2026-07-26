@@ -89,6 +89,19 @@ function createBlockFromJson(data, workspace) {
             createValueInput(block, "value", data.value)
             break
 
+        case "DealDamageZombie":
+            block = newBlock("deal_damage_zombie", workspace)
+
+            createValueInput(block, "zombie", withObjectDefault(data.zombie))
+            createValueInput(block, "damageDetails", data.damageDetails)
+            break
+        case "DealDamagePlant":
+            block = newBlock("deal_damage_plant", workspace)
+
+            createValueInput(block, "plant", withObjectDefault(data.plant))
+            createValueInput(block, "damage", data.damage)
+            break
+
         case "ExplodeCherryBomb": {
             block = newBlock("explode_cherry_bomb", workspace)
 
@@ -127,6 +140,13 @@ function createBlockFromJson(data, workspace) {
 
             break
         }
+
+        case "RectangleIntersectsRectangle":
+            block = newBlock("rectangle_intersects_rectangle", workspace)
+
+            createValueInput(block, "rectangle1", data.rectangle1)
+            createValueInput(block, "rectangle2", data.rectangle2)
+            break
 
 
         case "InvokeObjectMethod": {
@@ -270,6 +290,36 @@ function createValueBlock(value, workspace) {
 
                 return block
             }
+
+            case "ZombieBodyRectangle": {
+                const block = newBlock("zombie_body_rectangle", workspace)
+
+                createValueInput(block, "zombie", value.zombie)
+                createValueInput(
+                    block,
+                    "rectangleForProjectiles",
+                    value.rectangleForProjectiles
+                )
+
+                return block
+            }
+
+            case "PlantBodyRectangle": {
+                const block = newBlock("plant_body_rectangle", workspace)
+
+                createValueInput(block, "plant", value.plant)
+
+                return block
+            }
+
+            case "ProjectileBodyRectangle": {
+                const block = newBlock("projectile_body_rectangle", workspace)
+
+                createValueInput(block, "projectile", value.projectile)
+
+                return block
+            }
+
             case "GetSystemModule": {
                 const block = newBlock("system_module", workspace)
 
@@ -300,7 +350,23 @@ function createValueBlock(value, workspace) {
 
                 createValueInput(block, "width", value.width)
                 createValueInput(block, "height", value.height)
+                createValueInput(block, "xOffset", value.xOffset)
+                createValueInput(block, "yOffset", value.yOffset)
                 createValueInput(block, "node", value.node)
+
+                return block
+            }
+            case "CreateDamageDetails": {
+                const block = newBlock("zombie_damage_details", workspace)
+
+                block.setFieldValue(value.damageType ?? "physicle", "damageType")
+                createValueInput(block, "damage", value.damage)
+                createValueInput(block, "armorProtection", value.armorProtection)
+                createValueInput(block, "armorKnockSound", value.armorKnockSound)
+                createValueInput(block, "bodyKnockSound", value.bodyKnockSound)
+                createValueInput(block, "damageDirection", value.damageDirection)
+                createValueInput(block, "flash", value.flash)
+                createValueInput(block, "armorAlsoDamagedWhenNotProtecting", value.armorAlsoDamagedWhenNotProtecting)
 
                 return block
             }
