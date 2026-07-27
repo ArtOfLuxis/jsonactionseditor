@@ -178,6 +178,29 @@ function compile(block) {
             return null
         }
         switch (block.type) {
+            // Flow
+            case "sleep": {
+                return {
+                    kind: "Sleep",
+                    object: withObjectDefault(compile(block.getInputTargetBlock("object"))),
+                    cloneContext: block.getFieldValue("cloneContext") === "TRUE",
+                    time: compile(block.getInputTargetBlock("time")),
+                    actions: compileStatementList(block.getInputTargetBlock("actions")),
+                }
+            }
+
+
+            // Loops
+            case "for_loop": {
+                return {
+                    kind: "For",
+                    variable: compile(block.getInputTargetBlock("variable")),
+                    iterable: compile(block.getInputTargetBlock("iterable")),
+                    actions: compileStatementList(block.getInputTargetBlock("actions")),
+                }
+            }
+
+
             // Logic
             case "if_statement": {
                 const condition = compile(block.getInputTargetBlock("condition"))
@@ -288,6 +311,7 @@ function compile(block) {
                 }
             }
 
+
             // Math
             case "math_operation": {
                 const left = compile(block.getInputTargetBlock("left"))
@@ -325,32 +349,6 @@ function compile(block) {
                 }
             }
 
-            // Loops
-            case "for_loop": {
-                return {
-                    kind: "For",
-                    variable: compile(block.getInputTargetBlock("variable")),
-                    iterable: compile(block.getInputTargetBlock("iterable")),
-                    actions: compileStatementList(block.getInputTargetBlock("actions")),
-                }
-            }
-
-            // Other
-            case "console_log": {
-                return {
-                    kind: "ConsoleLog",
-                    values: [compile(block.getInputTargetBlock("value"))],
-                }
-            }
-            case "sleep": {
-                return {
-                    kind: "Sleep",
-                    object: withObjectDefault(compile(block.getInputTargetBlock("object"))),
-                    cloneContext: block.getFieldValue("cloneContext") === "TRUE",
-                    time: compile(block.getInputTargetBlock("time")),
-                    actions: compileStatementList(block.getInputTargetBlock("actions")),
-                }
-            }
 
             // Variables
             case "define_inline_variable": {
@@ -396,6 +394,21 @@ function compile(block) {
                     default: defaultValue
                 }
             }
+            case "get_context_object": {
+                const variableName = compile(block.getInputTargetBlock("name"))
+                const defaultValue = compile(block.getInputTargetBlock("default"))
+
+                return {
+                    kind: "GetContextObject",
+                    name: variableName,
+                    default: defaultValue
+                }
+            }
+            case "context": {
+                return {
+                    kind: "GetContext"
+                }
+            }
             case "context_target": {
                 return {
                     kind: "GetContextObject",
@@ -408,6 +421,7 @@ function compile(block) {
                     name: "source"
                 }
             }
+
 
             // Properties
             case "set_object_property": {
@@ -469,6 +483,7 @@ function compile(block) {
                 }
             }
 
+
             // Gameplay
             case "deal_damage_zombie": {
                 const zombie = compile(block.getInputTargetBlock("zombie"))
@@ -490,27 +505,7 @@ function compile(block) {
                     damage
                 }
             }
-            case "lawn_object_pool": {
-                const objectType = block.getFieldValue("objectType")
 
-                return {
-                    kind: `Get${objectType}PoolArray`
-                }
-            }
-            case "lane_object_pool": {
-                const objectType = block.getFieldValue("objectType")
-
-                return {
-                    kind: `GetLane${objectType}PoolArray`,
-                    lane: compile(block.getInputTargetBlock("lane"))
-                }
-            }
-            case "get_lane": {
-                return {
-                    kind: "GetLane",
-                    lane: compile(block.getInputTargetBlock("lane"))
-                }
-            }
             case "explode_cherry_bomb": {
                 const showExplosionText = block.getFieldValue("showExplosionText")
                 return {
@@ -555,6 +550,9 @@ function compile(block) {
                     parentObject: compile(block.getInputTargetBlock("parentObject"))
                 }
             }
+
+
+            // Hitboxes
             case "rectangle_intersects_rectangle": {
                 const rectangle1 = compile(block.getInputTargetBlock("rectangle1"))
                 const rectangle2 = compile(block.getInputTargetBlock("rectangle2"))
@@ -583,6 +581,70 @@ function compile(block) {
                     kind: "ProjectileBodyRectangle",
                     projectile: compile(block.getInputTargetBlock("projectile"))
                 }
+
+
+            // Lawn
+            case "lawn_object_pool": {
+                const objectType = block.getFieldValue("objectType")
+
+                return {
+                    kind: `Get${objectType}PoolArray`
+                }
+            }
+            case "lane_object_pool": {
+                const objectType = block.getFieldValue("objectType")
+
+                return {
+                    kind: `GetLane${objectType}PoolArray`,
+                    lane: compile(block.getInputTargetBlock("lane"))
+                }
+            }
+            case "get_lane": {
+                return {
+                    kind: "GetLane",
+                    lane: compile(block.getInputTargetBlock("lane"))
+                }
+            }
+            case "lane_index": {
+                return {
+                    kind: "GetLaneIndex",
+                    lane: compile(block.getInputTargetBlock("lane"))
+                }
+            }
+            case "upper_lane": {
+                return {
+                    kind: "GetUpperLane",
+                    lane: compile(block.getInputTargetBlock("lane"))
+                }
+            }
+            case "lower_lane": {
+                return {
+                    kind: "GetLowerLane",
+                    lane: compile(block.getInputTargetBlock("lane"))
+                }
+            }
+
+            case "get_object_lane": {
+                return {
+                    kind: "GetObjectLane",
+                    object: compile(block.getInputTargetBlock("object"))
+                }
+            }
+            case "get_object_square": {
+                return {
+                    kind: "GetObjectLnC",
+                    object: compile(block.getInputTargetBlock("object"))
+                }
+            }
+
+            case "get_square_in_lane": {
+                return {
+                    kind: "GetLnCInLane",
+                    lane: compile(block.getInputTargetBlock("lane")),
+                    column: compile(block.getInputTargetBlock("column"))
+                }
+            }
+
 
             // Advanced
             case "invoke_constructor": {
@@ -616,21 +678,7 @@ function compile(block) {
                     name
                 }
             }
-            case "get_context_object": {
-                const variableName = compile(block.getInputTargetBlock("name"))
-                const defaultValue = compile(block.getInputTargetBlock("default"))
 
-                return {
-                    kind: "GetContextObject",
-                    name: variableName,
-                    default: defaultValue
-                }
-            }
-            case "context": {
-                return {
-                    kind: "GetContext"
-                }
-            }
 
             // Primitives
             case "number":
@@ -639,8 +687,21 @@ function compile(block) {
                 return String(block.getFieldValue("value"))
             case "boolean":
                 return block.getFieldValue("value") === "true"
+            case "array": {
+                const values = []
+                let i = 0
+                while (block.getInput("ITEM" + i)) {
+                    values.push(compile(block.getInputTargetBlock("ITEM" + i)))
+                    i++
+                }
+                return values
+            }
+            case "null": {
+                return null
+            }
 
-            // Type
+
+            // Values
             case "vec2":
                 return {
                     kind: "CreateVec2",
@@ -654,15 +715,6 @@ function compile(block) {
                     y: compile(block.getInputTargetBlock("y")),
                     z: compile(block.getInputTargetBlock("z")),
                 }
-            case "array": {
-                const values = []
-                let i = 0
-                while (block.getInput("ITEM" + i)) {
-                    values.push(compile(block.getInputTargetBlock("ITEM" + i)))
-                    i++
-                }
-                return values
-            }
             case "rectangle":
                 return {
                     kind: "CreateRectangle",
@@ -671,20 +723,6 @@ function compile(block) {
                     xOffset: compile(block.getInputTargetBlock("xOffset")),
                     yOffset: compile(block.getInputTargetBlock("yOffset")),
                     node: compile(block.getInputTargetBlock("node")),
-                }
-            case "zombie_damage_details":
-                return {
-                    kind: "CreateDamageDetails",
-                    damage: compile(block.getInputTargetBlock("damage")),
-                    armorProtection: compile(block.getInputTargetBlock("armorProtection")),
-                    armorKnockSound: compile(block.getInputTargetBlock("armorKnockSound")),
-                    bodyKnockSound: compile(block.getInputTargetBlock("bodyKnockSound")),
-                    damageDirection: compile(block.getInputTargetBlock("damageDirection")),
-                    damageType: block.getFieldValue("damageType"),
-                    flash: compile(block.getInputTargetBlock("flash")),
-                    armorAlsoDamagedWhenNotProtecting: compile(
-                        block.getInputTargetBlock("armorAlsoDamagedWhenNotProtecting")
-                    )
                 }
             case "color": {
                 const hex = block.getFieldValue("color")
@@ -709,8 +747,28 @@ function compile(block) {
                     return null
                 }
             }
-            case "null": {
-                return null
+            case "zombie_damage_details":
+                return {
+                    kind: "CreateDamageDetails",
+                    damage: compile(block.getInputTargetBlock("damage")),
+                    armorProtection: compile(block.getInputTargetBlock("armorProtection")),
+                    armorKnockSound: compile(block.getInputTargetBlock("armorKnockSound")),
+                    bodyKnockSound: compile(block.getInputTargetBlock("bodyKnockSound")),
+                    damageDirection: compile(block.getInputTargetBlock("damageDirection")),
+                    damageType: block.getFieldValue("damageType"),
+                    flash: compile(block.getInputTargetBlock("flash")),
+                    armorAlsoDamagedWhenNotProtecting: compile(
+                        block.getInputTargetBlock("armorAlsoDamagedWhenNotProtecting")
+                    )
+                }
+
+
+            // Debug
+            case "console_log": {
+                return {
+                    kind: "ConsoleLog",
+                    values: [compile(block.getInputTargetBlock("value"))],
+                }
             }
 
             default:

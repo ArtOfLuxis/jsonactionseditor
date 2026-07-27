@@ -333,7 +333,55 @@ function createValueBlock(value, workspace) {
             case "GetLane": {
                 const block = newBlock("get_lane", workspace)
 
-                createValueInput(block, "lane", data.lane)
+                createValueInput(block, "lane", value.lane)
+
+                return block
+            }
+
+            case "GetUpperLane": {
+                const block = newBlock("upper_lane", workspace)
+
+                createValueInput(block, "lane", value.lane)
+
+                return block
+            }
+
+            case "GetLowerLane": {
+                const block = newBlock("lower_lane", workspace)
+
+                createValueInput(block, "lane", value.lane)
+
+                return block
+            }
+
+            case "GetLaneIndex": {
+                const block = newBlock("lane_index", workspace)
+
+                createValueInput(block, "lane", value.lane)
+
+                return block
+            }
+            case "GetObjectLane": {
+                const block = newBlock("get_object_lane", workspace)
+
+                createValueInput(block, "object", withObjectDefault(value.object))
+
+                return block
+            }
+
+            case "GetObjectLnC": {
+                const block = newBlock("get_object_square", workspace)
+
+                createValueInput(block, "object", withObjectDefault(value.object))
+
+                return block
+            }
+
+            case "GetLnCInLane": {
+                const block = newBlock("get_square_in_lane", workspace)
+
+                createValueInput(block, "lane", value.lane)
+                createValueInput(block, "column", value.column)
 
                 return block
             }
@@ -345,7 +393,7 @@ function createValueBlock(value, workspace) {
                 const block = newBlock("lawn_object_pool", workspace)
 
                 block.setFieldValue(
-                    data.kind.replace("Get", "").replace("PoolArray", ""),
+                    value.kind.replace("Get", "").replace("PoolArray", ""),
                     "objectType"
                 )
 
@@ -359,11 +407,11 @@ function createValueBlock(value, workspace) {
                 const block = newBlock("lane_object_pool", workspace)
 
                 block.setFieldValue(
-                    data.kind.replace("GetLane", "").replace("PoolArray", ""),
+                    value.kind.replace("GetLane", "").replace("PoolArray", ""),
                     "objectType"
                 )
 
-                createValueInput(block, "lane", data.lane)
+                createValueInput(block, "lane", value.lane)
 
                 return block
             }

@@ -13,6 +13,84 @@ function getInlineVariables() {
 }
 
 const blockDefinitions = [
+    // Flow
+    {
+        type: "start_block",
+        category: "Flow",
+        search_tags: [],
+        message0: "Start %1",
+        args0: [
+            {
+                type: "field_input",
+                name: "name"
+            }
+        ],
+        inputsInline: true,
+        nextStatement: null,
+        colour: "#5cc03f"
+    },
+    {
+        type: "sleep",
+        category: "Flow",
+        search_tags: [],
+        message0: "Sleep (Wait) \n Scheduler %1 Clone Context %2 \n Time %3 Actions %4",
+        args0: [
+            {
+                type: "input_value",
+                name: "object",
+                check: null
+            },
+            {
+                type: "field_checkbox",
+                name: "cloneContext"
+            },
+            {
+                type: "input_value",
+                name: "time",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_statement",
+                name: "actions"
+            }
+        ],
+        inputsInline: false,
+        previousStatement: null,
+        nextStatement: null,
+        colour: "#bd7b69"
+    },
+
+
+    // Loops
+    {
+        type: "for_loop",
+        category: "Loops",
+        search_tags: [],
+        message0: "For Loop\nVariable %1\nIterable %2\nActions %3",
+        args0: [
+            {
+                type: "input_value",
+                name: "variable",
+                check: ["Text", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "iterable",
+                check: ["Array", "Any"]
+            },
+            {
+                type: "input_statement",
+                name: "actions"
+            }
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        colour: "#4d68a0"
+    },
+
+
+
     // Logic
     {
         type: "if_statement",
@@ -180,101 +258,6 @@ const blockDefinitions = [
     },
 
 
-    // Loops
-    {
-        type: "for_loop",
-        category: "Loops",
-        search_tags: [],
-        message0: "For Loop\nVariable %1\nIterable %2\nActions %3",
-        args0: [
-            {
-                type: "input_value",
-                name: "variable",
-                check: ["Text", "Any"]
-            },
-            {
-                type: "input_value",
-                name: "iterable",
-                check: ["Array", "Any"]
-            },
-            {
-                type: "input_statement",
-                name: "actions"
-            }
-        ],
-        inputsInline: true,
-        previousStatement: null,
-        nextStatement: null,
-        colour: "#4d68a0"
-    },
-
-
-
-    // Other
-    {
-        type: "start_block",
-        category: "Other",
-        search_tags: [],
-        message0: "Start %1",
-        args0: [
-            {
-                type: "field_input",
-                name: "name"
-            }
-        ],
-        inputsInline: true,
-        nextStatement: null,
-        colour: "#5cc03f"
-    },
-    {
-        type: "console_log",
-        category: "Other",
-        search_tags: ["logger", "print"],
-        message0: "Console Log %1",
-        args0: [
-            {
-                type: "input_value",
-                name: "value",
-                check: null
-            }
-        ],
-        inputsInline: true,
-        previousStatement: null,
-        nextStatement: null,
-        colour: "#607D8B"
-    },
-    {
-        type: "sleep",
-        category: "Other",
-        search_tags: [],
-        message0: "Sleep (Wait) \n Scheduler %1 Clone Context %2 \n Time %3 Actions %4",
-        args0: [
-            {
-                type: "input_value",
-                name: "object",
-                check: null
-            },
-            {
-                type: "field_checkbox",
-                name: "cloneContext"
-            },
-            {
-                type: "input_value",
-                name: "time",
-                check: ["Number", "Any"]
-            },
-            {
-                type: "input_statement",
-                name: "actions"
-            }
-        ],
-        inputsInline: false,
-        previousStatement: null,
-        nextStatement: null,
-        colour: "#bd7b69"
-    },
-
-
 
     // Variables
     {
@@ -351,6 +334,31 @@ const blockDefinitions = [
         mutator: "optional_default_mutator",
         output: "Any",
         colour: "#595397"
+    },
+    {
+        type: "get_context_object",
+        category: "Variables",
+        search_tags: [],
+        message0: "Context Object %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "name",
+                check: ["Text", "Any"]
+            },
+        ],
+        mutator: "optional_default_mutator",
+        inputsInline: false,
+        output: "Any",
+        colour: "#554f92"
+    },
+    {
+        type: "context",
+        category: "Variables",
+        search_tags: ["object"],
+        message0: "Context",
+        output: "Any",
+        colour: "#4663a8"
     },
     {
         type: "context_target",
@@ -529,76 +537,15 @@ const blockDefinitions = [
         colour: "#66a536"
     },
     {
-        type: "lawn_object_pool",
-        category: "Gameplay",
-        search_tags: [],
-        message0: "Lawn Object Pool %1",
-        args0: [
-            {
-                type: "field_dropdown",
-                name: "objectType",
-                options: [
-                    ["Plants", "Plant"],
-                    ["Zombies", "Zombie"],
-                    ["Hypnotized Zombies", "HypnotizedZombie"],
-                    ["Tombs", "Tomb"]
-                ]
-            },
-        ],
-        inputsInline: true,
-        output: "Array",
-        colour: "#55b74f"
-    },
-    {
-        type: "lane_object_pool",
-        category: "Gameplay",
-        search_tags: [],
-        message0: "Lane Object Pool %1 %2",
-        args0: [
-            {
-                type: "field_dropdown",
-                name: "objectType",
-                options: [
-                    ["Plants", "Plant"],
-                    ["Zombies", "Zombie"],
-                    ["Hypnotized Zombies", "HypnotizedZombie"],
-                    ["Tombs", "Tomb"]
-                ]
-            },
-            {
-                type: "input_value",
-                name: "lane",
-                check: ["Lane", "Any"]
-            }],
-        inputsInline: true,
-        output: "Array",
-        colour: "#34a853"
-    },
-    {
-        type: "get_lane",
-        category: "Gameplay",
-        search_tags: [],
-        message0: "Get Lane %1",
-        args0: [
-            {
-                type: "input_value",
-                name: "lane",
-                check: ["Number", "Any"]
-            }],
-        inputsInline: true,
-        output: "Lane",
-        colour: "#60ad52"
-    },
-    {
         type: "explode_cherry_bomb",
         category: "Gameplay",
         search_tags: ["explosion"],
-        message0: "Cherry Explosion\nLnC %1 Damage %2",
+        message0: "Cherry Explosion\nLawn Square %1 Damage %2",
         args0: [
             {
                 type: "input_value",
                 name: "lnc",
-                check: null
+                check: ["LawnSquare", "Any"]
             },
             {
                 type: "input_value",
@@ -615,29 +562,29 @@ const blockDefinitions = [
     {
         type: "spawn_lane_fire",
         category: "Gameplay",
-        search_tags: ["fire", "jalapeno", "ground fire", "burn"],
+        search_tags: [],
         message0:
             "Jalapeno Fire\n" +
-            "LnC %1\n" +
-            "Damage %2\n" +
-            "Armor Protection %3\n" +
-            "Duration %4\n" +
-            "Fire Height %5\n" +
+            "Lawn Square %1" +
+            "Damage %2" +
+            "Armor Protection %3" +
+            "Duration %4" +
+            "Fire Height %5" +
             "Color %6\n" +
             "Spread Pattern %7\n" +
-            "Spread Speed %8\n" +
-            "Spread Distance %9\n" +
-            "Zombie Whitelist %10\n" +
-            "Include Hypno %11\n" +
-            "Include Plants %12\n" +
-            "Is DPS %13\n" +
-            "Burn Flying %14\n" +
+            "Spread Speed %8" +
+            "Spread Distance %9" +
+            "Zombie Whitelist %10" +
+            "Include Hypno %11" +
+            "Include Plants %12" +
+            "Is DPS %13" +
+            "Burn Flying %14" +
             "Parent Object %15",
         args0: [
             {
                 type: "input_value",
                 name: "lnc",
-                check: null
+                check: ["LawnSquare", "Any"]
             },
             {
                 type: "input_value",
@@ -720,14 +667,17 @@ const blockDefinitions = [
                 check: null
             }
         ],
-        inputsInline: true,
+        inputsInline: false,
         previousStatement: null,
         nextStatement: null,
         colour: "#d64b35"
     },
+
+
+    // Hitboxes
     {
         type: "rectangle_intersects_rectangle",
-        category: "Gameplay",
+        category: "Hitboxes",
         search_tags: [],
         message0: "Rectangle Intersects Rectangle\nRectangle 1 %1 Rectangle 2 %2",
         args0: [
@@ -748,7 +698,7 @@ const blockDefinitions = [
     },
     {
         type: "zombie_body_rectangle",
-        category: "Gameplay",
+        category: "Hitboxes",
         search_tags: [],
         message0: "Zombie Body Rectangle %1",
         args0: [
@@ -764,7 +714,7 @@ const blockDefinitions = [
     },
     {
         type: "plant_body_rectangle",
-        category: "Gameplay",
+        category: "Hitboxes",
         search_tags: [],
         message0: "Plant Body Rectangle %1",
         args0: [
@@ -780,7 +730,7 @@ const blockDefinitions = [
     },
     {
         type: "projectile_body_rectangle",
-        category: "Gameplay",
+        category: "Hitboxes",
         search_tags: [],
         message0: "Projectile Body Rectangle %1",
         args0: [
@@ -793,6 +743,174 @@ const blockDefinitions = [
         inputsInline: false,
         output: "Rectangle",
         colour: "#67c9a9"
+    },
+
+
+
+    // Lawn
+    {
+        type: "lawn_object_pool",
+        category: "Lawn",
+        search_tags: [],
+        message0: "Lawn Object Pool %1",
+        args0: [
+            {
+                type: "field_dropdown",
+                name: "objectType",
+                options: [
+                    ["Plants", "Plant"],
+                    ["Zombies", "Zombie"],
+                    ["Hypnotized Zombies", "HypnotizedZombie"],
+                    ["Tombs", "Tomb"]
+                ]
+            },
+        ],
+        inputsInline: true,
+        output: "Array",
+        colour: "#55b74f"
+    },
+    {
+        type: "lane_object_pool",
+        category: "Lawn",
+        search_tags: [],
+        message0: "Lane Object Pool %1 %2",
+        args0: [
+            {
+                type: "field_dropdown",
+                name: "objectType",
+                options: [
+                    ["Plants", "Plant"],
+                    ["Zombies", "Zombie"],
+                    ["Hypnotized Zombies", "HypnotizedZombie"],
+                    ["Tombs", "Tomb"]
+                ]
+            },
+            {
+                type: "input_value",
+                name: "lane",
+                check: ["Lane", "Any"]
+            }
+        ],
+        inputsInline: true,
+        output: "Array",
+        colour: "#34a853"
+    },
+    {
+        type: "get_lane",
+        category: "Lawn",
+        search_tags: [],
+        message0: "Get Lane by Index %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "lane",
+                check: ["Number", "Any"]
+            }
+        ],
+        inputsInline: true,
+        output: "Lane",
+        colour: "#60ad52"
+    },
+    {
+        type: "lane_index",
+        category: "Lawn",
+        search_tags: [],
+        message0: "Get Index of Lane %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "lane",
+                check: ["Lane", "Any"]
+            }
+        ],
+        inputsInline: true,
+        output: "Lane",
+        colour: "#50acac"
+    },
+    {
+        type: "upper_lane",
+        category: "Lawn",
+        search_tags: [],
+        message0: "Upper Lane of Lane %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "lane",
+                check: ["Lane", "Any"]
+            }
+        ],
+        inputsInline: true,
+        output: "Lane",
+        colour: "#384897"
+    },
+    {
+        type: "lower_lane",
+        category: "Lawn",
+        search_tags: [],
+        message0: "Lower Lane of Lane %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "lane",
+                check: ["Lane", "Any"]
+            }
+        ],
+        inputsInline: true,
+        output: "Lane",
+        colour: "#384897"
+    },
+    {
+        type: "get_object_lane",
+        category: "Lawn",
+        search_tags: [],
+        message0: "Lane of Object %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "object",
+                check: null
+            }
+        ],
+        inputsInline: true,
+        output: "Lane",
+        colour: "#3e3897"
+    },
+    {
+        type: "get_object_square",
+        category: "Lawn",
+        search_tags: [],
+        message0: "Lawn Square of Object %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "object",
+                check: null
+            }
+        ],
+        inputsInline: true,
+        output: "LawnSquare",
+        colour: "#7841c0"
+    },
+    {
+        type: "get_square_in_lane",
+        category: "Lawn",
+        search_tags: [],
+        message0: "Get Lawn Square in Lane\nLane %1 Column %2",
+        args0: [
+            {
+                type: "input_value",
+                name: "lane",
+                check: ["Lane", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "column",
+                check: ["Number", "Any"]
+            },
+        ],
+        inputsInline: false,
+        output: "LawnSquare",
+        colour: "#875ab3"
     },
 
 
@@ -888,30 +1006,6 @@ const blockDefinitions = [
         output: "Any",
         colour: "#c45b89"
     },
-    {
-        type: "get_context_object",
-        category: "Advanced",
-        search_tags: [],
-        message0: "Context Object %1",
-        args0: [
-            {
-                type: "input_value",
-                name: "name"
-            },
-        ],
-        mutator: "optional_default_mutator",
-        inputsInline: false,
-        output: "Any",
-        colour: "#554f92"
-    },
-    {
-        type: "context",
-        category: "Advanced",
-        search_tags: ["object"],
-        message0: "Context",
-        output: "Any",
-        colour: "#4663a8"
-    },
 
 
 
@@ -964,13 +1058,34 @@ const blockDefinitions = [
         output: "Boolean",
         colour: "#88d0bf"
     },
+    {
+        type: "array",
+        category: "Primitives",
+        search_tags: ["list"],
+        message0: "Array %1",
+        args0: [{ type: "input_dummy", name: "EMPTY" }],
+        mutator: "array_mutator",
+        inputsInline: false,
+        output: "Array",
+        colour: "#c03e3e"
+    },
+    {
+        type: "null",
+        category: "Primitives",
+        search_tags: ["list"],
+        message0: "Null",
+        args0: [],
+        inputsInline: false,
+        output: null,
+        colour: "#a2a2a2"
+    },
 
 
 
-    // Types
+    // Values
     {
         type: "vec2",
-        category: "Types",
+        category: "Values",
         search_tags: ["vector", "2d"],
         message0: "Vec2 x%1 y%2",
         args0: [
@@ -991,7 +1106,7 @@ const blockDefinitions = [
     },
     {
         type: "vec3",
-        category: "Types",
+        category: "Values",
         search_tags: ["vector", "3d"],
         message0: "Vec3 x%1 y%2 z%3",
         args0: [
@@ -1017,7 +1132,7 @@ const blockDefinitions = [
     },
     {
         type: "rectangle",
-        category: "Types",
+        category: "Values",
         search_tags: ["hitbox"],
         message0: "Rectangle \nWidth %1 \nHeight %2\nX Offset %3\nY Offset %4\nCenter Node %5",
         args0: [
@@ -1052,19 +1167,8 @@ const blockDefinitions = [
         colour: "#54a3cb"
     },
     {
-        type: "array",
-        category: "Types",
-        search_tags: ["list"],
-        message0: "Array %1",
-        args0: [{ type: "input_dummy", name: "EMPTY" }],
-        mutator: "array_mutator",
-        inputsInline: false,
-        output: "Array",
-        colour: "#c03e3e"
-    },
-    {
         type: "color",
-        category: "Types",
+        category: "Values",
         search_tags: ["rgb"],
         message0: "Color %1",
         args0: [
@@ -1080,7 +1184,7 @@ const blockDefinitions = [
     },
     {
         type: "color_rgb",
-        category: "Types",
+        category: "Values",
         search_tags: [],
         message0: "Color R%1 G%2 B%3",
         args0: [
@@ -1105,8 +1209,24 @@ const blockDefinitions = [
         colour: "#cd0dcd"
     },
     {
+        type: "plain_json_object",
+        category: "Values",
+        search_tags: [],
+        message0: "JSON Object %1",
+        args0: [
+            {
+                type: "field_multiline_json",
+                name: "object",
+                text: "{}"
+            }
+        ],
+        inputsInline: true,
+        output: "Any",
+        colour: "#4c54dc"
+    },
+    {
         type: "zombie_damage_details",
-        category: "Types",
+        category: "Values",
         search_tags: [],
         message0: "Zombie Damage Details\n Damage %1 Damage Type %2\n Armor Protection %3 Armor Knock Sound %4 Body Knock Sound %5 Flash %6 Always Damage Armor %7 Damage Direction %8",
         args0: [
@@ -1161,31 +1281,26 @@ const blockDefinitions = [
         output: "DamageDetails",
         colour: "#6dbb31"
     },
+
+
+
+    // Debug
     {
-        type: "plain_json_object",
-        category: "Types",
-        search_tags: [],
-        message0: "JSON Object %1",
+        type: "console_log",
+        category: "Debug",
+        search_tags: ["logger", "print"],
+        message0: "Console Log %1",
         args0: [
             {
-                type: "field_multiline_json",
-                name: "object",
-                text: "{}"
+                type: "input_value",
+                name: "value",
+                check: null
             }
         ],
         inputsInline: true,
-        output: "Any",
-        colour: "#4c54dc"
-    },
-    {
-        type: "null",
-        category: "Types",
-        search_tags: ["list"],
-        message0: "Null",
-        args0: [],
-        inputsInline: false,
-        output: null,
-        colour: "#a2a2a2"
+        previousStatement: null,
+        nextStatement: null,
+        colour: "#607D8B"
     },
 ]
 
