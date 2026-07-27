@@ -420,7 +420,8 @@ const explodeOptions = [
     ["Screen Shake Duration", "screenShakeDuration", "Number"],
     ["Position Override", "positionOverride", "Vec3"],
     ["Play Sound", "playSound", "Boolean"],
-    ["Show Explosion Text", "showExplosionText", "Boolean"]
+    ["Show Explosion Text", "showExplosionText", "Boolean"],
+    ["Zombie Callback", "zombieCallback", "_statement"],
 ]
 
 const optionMap = Object.fromEntries(
@@ -461,9 +462,9 @@ const explodeCherryBombMutator = {
 
         while (item) {
             const option = explodeOptionFromBlockType(item.type)
+            const input = this.getInput(option)
 
-            item.valueConnection_ =
-                this.getInput(option)?.connection.targetConnection
+            item.valueConnection_ = input?.connection.targetConnection
 
             item = item.nextConnection?.targetBlock()
         }
@@ -516,14 +517,23 @@ const explodeCherryBombMutator = {
         for (const [input, {label, check}] of Object.entries(optionMap)) {
             if (this.explodeOptions_.includes(input)) {
                 if (!this.getInput(input)) {
-                    this.appendValueInput(input)
-                        .setCheck(check ? [check, "Any"] : null)
-                        .appendField(label)
+                    if (check === "_statement") {
+                        this.appendStatementInput(input)
+                            .appendField(label)
+                    } else {
+                        this.appendValueInput(input)
+                            .setCheck(check ? [check, "Any"] : null)
+                            .appendField(label)
+                    }
                 }
             } else {
                 const existing = this.getInput(input)
                 if (existing) {
-                    existing.connection.targetBlock()?.dispose(true, true)
+                    if (check === "_statement") {
+                        existing.connection.targetBlock()?.dispose(true, true)
+                    } else {
+                        existing.connection.targetBlock()?.dispose(true, true)
+                    }
                     this.removeInput(input)
                 }
             }

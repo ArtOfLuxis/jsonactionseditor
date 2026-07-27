@@ -40,6 +40,11 @@ const shadowProperties = {
             "get_context_object",
             "system_module",
         ]
+    },
+    "number": {
+        "lane": [
+            "get_lane"
+        ]
     }
 }
 

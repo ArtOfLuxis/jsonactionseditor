@@ -144,6 +144,30 @@ function createBlockFromJson(data, workspace) {
 
             createValueInput(block, "playSound", data.playSound)
 
+            createStatementInput(block, "zombieCallback", data.zombieCallback)
+
+            break
+        }
+
+        case "SpawnLaneFire": {
+            block = newBlock("spawn_lane_fire", workspace)
+
+            createValueInput(block, "lnc", data.lnc)
+            createValueInput(block, "damage", data.damage)
+            createValueInput(block, "armorProtection", data.armorProtection)
+            createValueInput(block, "duration", data.duration)
+            createValueInput(block, "height", data.height ?? data.length)
+            block.setFieldValue(data.color, "color")
+            block.setFieldValue(data.spreadStyle, "spreadStyle")
+            createValueInput(block, "spreadSpeed", data.spreadSpeed ?? data.fireLength)
+            createValueInput(block, "spreadDistance", data.spreadDistance ?? data.fireWidth)
+            createValueInput(block, "zombieWhitelist", data.zombieWhitelist ?? data.whitelist)
+            createValueInput(block, "hypnoIncluded", data.hypnoIncluded)
+            createValueInput(block, "plantsIncluded", data.plantsIncluded)
+            createValueInput(block, "isDPS", data.isDPS)
+            createValueInput(block, "burnsFlying", data.burnsFlying)
+            createValueInput(block, "parentObject", data.parentObject ?? data.parent)
+
             break
         }
 
@@ -302,6 +326,44 @@ function createValueBlock(value, workspace) {
                     block.updateShape_()
                     createValueInput(block, "default", value.default)
                 }
+
+                return block
+            }
+
+            case "GetLane": {
+                const block = newBlock("get_lane", workspace)
+
+                createValueInput(block, "lane", data.lane)
+
+                return block
+            }
+
+            case "GetPlantPoolArray":
+            case "GetZombiePoolArray":
+            case "GetHypnotizedZombiePoolArray":
+            case "GetTombPoolArray": {
+                const block = newBlock("lawn_object_pool", workspace)
+
+                block.setFieldValue(
+                    data.kind.replace("Get", "").replace("PoolArray", ""),
+                    "objectType"
+                )
+
+                return block
+            }
+
+            case "GetLanePlantPoolArray":
+            case "GetLaneZombiePoolArray":
+            case "GetLaneHypnotizedZombiePoolArray":
+            case "GetLaneTombPoolArray": {
+                const block = newBlock("lane_object_pool", workspace)
+
+                block.setFieldValue(
+                    data.kind.replace("GetLane", "").replace("PoolArray", ""),
+                    "objectType"
+                )
+
+                createValueInput(block, "lane", data.lane)
 
                 return block
             }
@@ -492,6 +554,8 @@ function createValueBlock(value, workspace) {
 }
 
 function createValueInput(parent, inputName, value) {
+    if (value === undefined) return
+
     const child = createValueBlock(value, parent.workspace)
 
     if (!child) return

@@ -490,6 +490,27 @@ function compile(block) {
                     damage
                 }
             }
+            case "lawn_object_pool": {
+                const objectType = block.getFieldValue("objectType")
+
+                return {
+                    kind: `Get${objectType}PoolArray`
+                }
+            }
+            case "lane_object_pool": {
+                const objectType = block.getFieldValue("objectType")
+
+                return {
+                    kind: `GetLane${objectType}PoolArray`,
+                    lane: compile(block.getInputTargetBlock("lane"))
+                }
+            }
+            case "get_lane": {
+                return {
+                    kind: "GetLane",
+                    lane: compile(block.getInputTargetBlock("lane"))
+                }
+            }
             case "explode_cherry_bomb": {
                 const showExplosionText = block.getFieldValue("showExplosionText")
                 return {
@@ -510,7 +531,28 @@ function compile(block) {
                     damageType: compile(block.getInputTargetBlock("damageType")),
                     screenShakeDuration: compile(block.getInputTargetBlock("screenShakeDuration")),
                     positionOverride: compile(block.getInputTargetBlock("positionOverride")),
-                    playSound: compile(block.getInputTargetBlock("playSound"))
+                    playSound: compile(block.getInputTargetBlock("playSound")),
+                    zombieCallback: compileStatementList(block.getInputTargetBlock("zombieCallback"))
+                }
+            }
+            case "spawn_lane_fire": {
+                return {
+                    kind: "SpawnLaneFire",
+                    lnc: compile(block.getInputTargetBlock("lnc")),
+                    damage: compile(block.getInputTargetBlock("damage")),
+                    armorProtection: compile(block.getInputTargetBlock("armorProtection")),
+                    duration: compile(block.getInputTargetBlock("duration")),
+                    height: compile(block.getInputTargetBlock("height")),
+                    color: block.getFieldValue("color"),
+                    spreadStyle: block.getFieldValue("spreadStyle"),
+                    spreadSpeed: compile(block.getInputTargetBlock("spreadSpeed")),
+                    spreadDistance: compile(block.getInputTargetBlock("spreadDistance")),
+                    zombieWhitelist: compile(block.getInputTargetBlock("zombieWhitelist")),
+                    hypnoIncluded: compile(block.getInputTargetBlock("hypnoIncluded")),
+                    plantsIncluded: compile(block.getInputTargetBlock("plantsIncluded")),
+                    isDPS: compile(block.getInputTargetBlock("isDPS")),
+                    burnsFlying: compile(block.getInputTargetBlock("burnsFlying")),
+                    parentObject: compile(block.getInputTargetBlock("parentObject"))
                 }
             }
             case "rectangle_intersects_rectangle": {

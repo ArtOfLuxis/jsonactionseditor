@@ -529,6 +529,67 @@ const blockDefinitions = [
         colour: "#66a536"
     },
     {
+        type: "lawn_object_pool",
+        category: "Gameplay",
+        search_tags: [],
+        message0: "Lawn Object Pool %1",
+        args0: [
+            {
+                type: "field_dropdown",
+                name: "objectType",
+                options: [
+                    ["Plants", "Plant"],
+                    ["Zombies", "Zombie"],
+                    ["Hypnotized Zombies", "HypnotizedZombie"],
+                    ["Tombs", "Tomb"]
+                ]
+            },
+        ],
+        inputsInline: true,
+        output: "Array",
+        colour: "#55b74f"
+    },
+    {
+        type: "lane_object_pool",
+        category: "Gameplay",
+        search_tags: [],
+        message0: "Lane Object Pool %1 %2",
+        args0: [
+            {
+                type: "field_dropdown",
+                name: "objectType",
+                options: [
+                    ["Plants", "Plant"],
+                    ["Zombies", "Zombie"],
+                    ["Hypnotized Zombies", "HypnotizedZombie"],
+                    ["Tombs", "Tomb"]
+                ]
+            },
+            {
+                type: "input_value",
+                name: "lane",
+                check: ["Lane", "Any"]
+            }],
+        inputsInline: true,
+        output: "Array",
+        colour: "#34a853"
+    },
+    {
+        type: "get_lane",
+        category: "Gameplay",
+        search_tags: [],
+        message0: "Get Lane %1",
+        args0: [
+            {
+                type: "input_value",
+                name: "lane",
+                check: ["Number", "Any"]
+            }],
+        inputsInline: true,
+        output: "Lane",
+        colour: "#60ad52"
+    },
+    {
         type: "explode_cherry_bomb",
         category: "Gameplay",
         search_tags: ["explosion"],
@@ -550,6 +611,119 @@ const blockDefinitions = [
         previousStatement: null,
         nextStatement: null,
         colour: "#e33b3b"
+    },
+    {
+        type: "spawn_lane_fire",
+        category: "Gameplay",
+        search_tags: ["fire", "jalapeno", "ground fire", "burn"],
+        message0:
+            "Jalapeno Fire\n" +
+            "LnC %1\n" +
+            "Damage %2\n" +
+            "Armor Protection %3\n" +
+            "Duration %4\n" +
+            "Fire Height %5\n" +
+            "Color %6\n" +
+            "Spread Pattern %7\n" +
+            "Spread Speed %8\n" +
+            "Spread Distance %9\n" +
+            "Zombie Whitelist %10\n" +
+            "Include Hypno %11\n" +
+            "Include Plants %12\n" +
+            "Is DPS %13\n" +
+            "Burn Flying %14\n" +
+            "Parent Object %15",
+        args0: [
+            {
+                type: "input_value",
+                name: "lnc",
+                check: null
+            },
+            {
+                type: "input_value",
+                name: "damage",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "armorProtection",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "duration",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "height",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "field_dropdown",
+                name: "color",
+                options: [
+                    ["Yellow", "yellow"],
+                    ["Green", "green"],
+                    ["Right", "right"],
+                    ["Split", "split"]
+                ]
+            },
+            {
+                type: "field_dropdown",
+                name: "spreadStyle",
+                options: [
+                    ["Split", "split"],
+                    ["Left", "left"],
+                    ["Right", "right"],
+                    ["Split", "split"]
+                ]
+            },
+            {
+                type: "input_value",
+                name: "spreadSpeed",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "spreadDistance",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "zombieWhitelist",
+                check: ["Array", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "hypnoIncluded",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "plantsIncluded",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "isDPS",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "burnsFlying",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "parentObject",
+                check: null
+            }
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        colour: "#d64b35"
     },
     {
         type: "rectangle_intersects_rectangle",
