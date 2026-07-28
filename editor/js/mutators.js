@@ -422,11 +422,13 @@ function createOptionalInputMutator(
             let connection = container.getInput("STACK").connection
 
             for (const option of this.optionalInputs_) {
-                const block = workspace.newBlock(`${id}_mutator_item_${option}`)
-                block.initSvg()
+                try {
+                    const block = workspace.newBlock(`${id}_mutator_item_${option}`)
+                    block.initSvg()
 
-                connection.connect(block.previousConnection)
-                connection = block.nextConnection
+                    connection.connect(block.previousConnection)
+                    connection = block.nextConnection
+                } catch (e) {}
             }
 
             return container

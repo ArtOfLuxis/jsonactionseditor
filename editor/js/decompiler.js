@@ -613,6 +613,11 @@ function createValueInput(parent, inputName, value) {
 
     if (!child) return
 
+    if (Array.isArray(parent.optionalInputs_) && !parent.optionalInputs_.includes(inputName)) {
+        parent.optionalInputs_.push(inputName)
+        parent.updateShape_()
+    }
+
     const input = parent.getInput(inputName)
     if (!input) {
         logger(
