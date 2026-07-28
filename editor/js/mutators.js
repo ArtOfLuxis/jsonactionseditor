@@ -449,11 +449,9 @@ function createOptionalInputMutator(
             this.updateShape_()
 
             for (const [option, connection] of Object.entries(connections)) {
-                if (!connection) continue
-
-                try {
+                if (connection && !connection.isConnected()) {
                     this.getInput(option)?.connection?.connect(connection)
-                } catch {}
+                }
             }
         },
 
@@ -466,6 +464,13 @@ function createOptionalInputMutator(
                 } else {
                     const input = this.getInput(option.id)
                     if (!input) continue
+
+                    const connection = input.connection?.targetConnection
+
+                    if (connection) {
+                        connection.disconnect()
+                        connection.getSourceBlock().bumpNeighbours()
+                    }
 
                     input.connection?.targetBlock()?.dispose(true, true)
                     this.removeInput(option.id)
