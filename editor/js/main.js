@@ -280,6 +280,13 @@ function defineNewWorkspace(id) {
     workspace.setTheme(darkTheme)
     registerSearchCallback(workspace)
 
+    attachHighlightListener(workspace)
+
+    const flyout = workspace.getFlyout()
+    if (flyout) {
+        attachHighlightListener(flyout.getWorkspace())
+    }
+
     return workspace
 }
 

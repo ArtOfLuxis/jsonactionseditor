@@ -1308,8 +1308,181 @@ for (const key of Object.keys(Blockly.Blocks)) {
     delete Blockly.Blocks[key] // delete all vanilla blocks
 }
 
+addConnectionSpacing(blockDefinitions, 2)
+
 Blockly.defineBlocksWithJsonArray(blockDefinitions)
 
 const blockDefinitionMap = new Map(
     blockDefinitions.map(def => [def.type, def])
 )
+
+function attachHighlightListener(workspace) {
+    workspace.addChangeListener((e) => {
+        const triggers = [
+            Blockly.Events.BLOCK_MOVE,
+            Blockly.Events.BLOCK_CHANGE,
+            Blockly.Events.BLOCK_CREATE,
+            Blockly.Events.BLOCK_DELETE,
+            Blockly.Events.FINISHED_LOADING,
+        ];
+        if (triggers.includes(e.type)) {
+            updateConnectionHighlights(workspace)
+        }
+    })
+}
+
+const typeMap = {
+    Number: ["#58c665", "Number"],
+    Text: ["#e59451", "Text"],
+    Boolean: ["#88d0bf", "Boolean"],
+    Array: ["#c03e3e", "Array"],
+    Vec2: ["#cb8a46", "Vec2"],
+    Vec3: ["#e09855", "Vec3"],
+    Rectangle: ["#54a3cb", "Rectangle"],
+    Color: ["#cd0dcd", "Color"],
+    DamageDetails: ["#6dbb31", "Zombie Damage Details"],
+    Lane: ["#60ad52", "Lane"],
+    LawnSquare: ["#875ab3", "Lawn Square"],
+    Any: ["#acb1b7", "Any"],
+}
+
+function getConnectionTypeLabel(connection) {
+    const check = connection.getCheck()
+    if (!check || check.length === 0) return "Any"
+    const specific = check.find(t => t !== "Any")
+    return typeMap[specific || check[0]][1]
+}
+
+function getConnectionColor(connection) {
+    const check = connection.getCheck()
+    if (!check || check.length === 0) return typeMap.Any[0]
+    const specific = check.find(t => t !== "Any")
+    return (typeMap[specific || check[0]] || typeMap.Any)[0]
+}
+
+function addConnectionSpacing(defs, spaces = 2) {
+    const pad = "\u00A0".repeat(spaces);
+
+    for (const def of defs) {
+        for (const msgKey of ["message0", "message1", "message2", "message3"]) {
+            if (!def[msgKey]) continue
+
+            const argsKey = "args" + msgKey.slice(-1)
+            const oldArgs = def[argsKey]
+            if (!oldArgs) continue
+
+            const tokens = def[msgKey].split(/(%\d+)/g).filter(t => t !== "")
+
+            const newArgs = []
+            const newMsgParts = []
+            let argCounter = 1
+
+            for (const tok of tokens) {
+                const m = tok.match(/^%(\d+)$/)
+                if (!m) {
+                    newMsgParts.push(tok)
+                    continue;
+                }
+                const origArg = oldArgs[Number(m[1]) - 1]
+
+                if (origArg && origArg.type === "input_value") {
+                    newArgs.push({
+                        type: "field_label",
+                        name: `__spacer${argCounter}`,
+                        text: pad
+                    });
+                    newMsgParts.push(`%${argCounter}`)
+                    argCounter++
+                }
+
+                newArgs.push(origArg)
+                newMsgParts.push(`%${argCounter}`)
+                argCounter++
+            }
+
+            def[msgKey] = newMsgParts.join("")
+            def[argsKey] = newArgs
+        }
+    }
+    return defs
+}
+
+const MARKER_OFFSET_X = -20
+const MARKER_OFFSET_Y = 8
+const MARKER_RADIUS = 5
+const OUTPUT_MARKER_OFFSET_X = -3
+const OUTPUT_MARKER_OFFSET_Y = 8
+
+function updateConnectionHighlights(workspace) {
+    for (const block of workspace.getAllBlocks(false)) {
+        if (block.typedConnectionMarkerGroup) {
+            block.typedConnectionMarkerGroup.remove()
+            block.typedConnectionMarkerGroup = null
+        }
+
+        const markerGroup = document.createElementNS("http://www.w3.org/2000/svg", "g")
+        markerGroup.setAttribute("class", "typedConnectionMarkers")
+
+        for (const input of block.inputList) {
+            const connection = input.connection
+            if (!connection || connection.type !== Blockly.INPUT_VALUE) continue
+
+            let offset
+            try {
+                offset = connection.getOffsetInBlock()
+            } catch (e) {
+                continue
+            }
+
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+            circle.setAttribute("cx", offset.x + MARKER_OFFSET_X)
+            circle.setAttribute("cy", offset.y + MARKER_OFFSET_Y)
+            circle.setAttribute("r", MARKER_RADIUS)
+            circle.setAttribute("fill", getConnectionColor(connection))
+            circle.setAttribute("stroke", "#000")
+            circle.setAttribute("stroke-width", "0.5")
+            circle.setAttribute("pointer-events", "auto")
+            circle.style.cursor = "default"
+
+            const title = document.createElementNS("http://www.w3.org/2000/svg", "title")
+            title.textContent = getConnectionTypeLabel(connection)
+            circle.appendChild(title)
+
+            markerGroup.appendChild(circle)
+        }
+
+        const outConnection = block.outputConnection
+        if (outConnection) {
+            let offset
+            try {
+                offset = outConnection.getOffsetInBlock()
+            } catch (e) {
+                offset = null
+            }
+            if (outConnection.isConnected()) continue
+
+            if (offset) {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+                circle.setAttribute("cx", offset.x + OUTPUT_MARKER_OFFSET_X)
+                circle.setAttribute("cy", offset.y + OUTPUT_MARKER_OFFSET_Y)
+                circle.setAttribute("r", MARKER_RADIUS)
+                circle.setAttribute("fill", getConnectionColor(outConnection))
+                circle.setAttribute("stroke", "#000")
+                circle.setAttribute("stroke-width", "0.5")
+                circle.setAttribute("pointer-events", "auto")
+                circle.style.cursor = "default"
+
+                const title = document.createElementNS("http://www.w3.org/2000/svg", "title")
+                title.textContent = getConnectionTypeLabel(outConnection)
+                circle.appendChild(title)
+
+                markerGroup.appendChild(circle)
+            }
+        }
+
+        if (markerGroup.childNodes.length > 0) {
+            block.getSvgRoot().appendChild(markerGroup)
+            block.typedConnectionMarkerGroup = markerGroup
+        }
+    }
+}
