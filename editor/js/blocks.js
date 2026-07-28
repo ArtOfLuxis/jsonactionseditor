@@ -131,6 +131,32 @@ const blockDefinitions = [
         nextStatement: null,
         colour: "#4d68a0"
     },
+    {
+        type: "repeat_loop",
+        category: "Loops",
+        search_tags: [],
+        message0: "Repeat\nVariable %1\nTimes %2\nActions %3",
+        args0: [
+            {
+                type: "input_value",
+                name: "variable",
+                check: ["Text", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "times",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_statement",
+                name: "actions"
+            }
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        colour: "#4c59b8"
+    },
 
 
 
@@ -314,6 +340,27 @@ const blockDefinitions = [
         inputsInline: true,
         output: "Number",
         colour: "#4670b6"
+    },
+    {
+        type: "math_random",
+        category: "Math",
+        search_tags: [],
+        message0: "Random\nMin %1 Max %2",
+        args0: [
+            {
+                type: "input_value",
+                name: "min",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "max",
+                check: ["Number", "Any"]
+            }
+        ],
+        inputsInline: false,
+        output: "Number",
+        colour: "#6f68a8"
     },
     {
         type: "math_random",

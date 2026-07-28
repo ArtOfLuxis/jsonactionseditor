@@ -34,6 +34,13 @@ function createBlockFromJson(data, workspace) {
             createValueInput(block, "iterable", data.iterable)
             createStatementInput(block, "actions", data.actions)
             break
+        case "Repeat":
+            block = newBlock("repeat_loop", workspace)
+
+            createValueInput(block, "variable", data.variable)
+            createValueInput(block, "times", data.times)
+            createStatementInput(block, "actions", data.actions)
+            break
 
         case "ConsoleLog":
             block = newBlock("console_log", workspace)

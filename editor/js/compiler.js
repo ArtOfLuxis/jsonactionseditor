@@ -199,6 +199,14 @@ function compile(block) {
                     actions: compileStatementList(block.getInputTargetBlock("actions")),
                 }
             }
+            case "repeat_loop": {
+                return {
+                    kind: "Repeat",
+                    variable: compile(block.getInputTargetBlock("variable")),
+                    times: compile(block.getInputTargetBlock("times")),
+                    actions: compileStatementList(block.getInputTargetBlock("actions")),
+                }
+            }
 
 
             // Logic
