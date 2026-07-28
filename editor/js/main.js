@@ -362,7 +362,7 @@ document.getElementById("addPageBtn").onclick = () => {
     }
 })()
 
-const searchContainer = document.getElementById("toolboxSearchContainer");
+const searchContainer = document.getElementById("toolboxSearchContainer")
 
 function positionSearch() {
     const toolbox = currentPage.getToolbox()

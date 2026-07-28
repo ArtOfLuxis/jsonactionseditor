@@ -16,10 +16,10 @@ const exportWorkspace = () => {
 
     URL.revokeObjectURL(url)
 
-    logger("Workspace exported.", "success");
+    logger("Workspace exported.", "success")
 }
 
-const importWorkspaceFile = document.getElementById("importWorkspaceFile");
+const importWorkspaceFile = document.getElementById("importWorkspaceFile")
 
 const importWorkspace = () => {
     importWorkspaceFile.click()
@@ -27,7 +27,7 @@ const importWorkspace = () => {
 
 importWorkspaceFile.onchange = async (e) => {
     const file = e.target.files[0]
-    if (!file) return;
+    if (!file) return
 
     if (!await showConfirm(`Import JSON from Workspace ${file.name}? Current workspace will be replaced.`)) {
         return
@@ -171,10 +171,10 @@ let resizing = false
 resizer.addEventListener("mousedown", event => {
     event.preventDefault()
     resizing = true
-});
+})
 
 document.addEventListener("mousemove", event => {
-    if (window.innerWidth <= 900) return;
+    if (window.innerWidth <= 900) return
     if (!resizing) return
 
     const width = Math.min(900, Math.max(420, window.innerWidth - event.clientX))

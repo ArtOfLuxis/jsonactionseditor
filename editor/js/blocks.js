@@ -1,15 +1,53 @@
 
 function getInlineVariables() {
-    const vars = [];
+    const vars = []
 
     for (const block of currentPage.getAllBlocks()) {
         if (block.type === "define_inline_variable") {
-            const name = block.getFieldValue("name");
+            const name = block.getFieldValue("name")
             vars.push([name, name])
         }
     }
 
     return vars.length ? vars : [["<none>", ""]]
+}
+
+const BlocklyConstants = {
+    DropDownOptions: {
+        DamageType: [
+            ["Physical", "physicle"],
+            ["Fire", "fire"],
+            ["Ray", "ray"],
+            ["Electricity", "electricity"],
+            ["Potato Mine", "potatoMine"],
+        ],
+
+        JalapenoFireColor: [
+            ["Yellow", "yellow"],
+            ["Green", "green"],
+        ],
+
+        JalapenoSpreadPattern: [
+            ["Split", "split"],
+            ["Left", "left"],
+            ["Right", "right"],
+            ["Cross", "cross"],
+        ],
+
+        ObjectTypes: [
+            ["Plants", "Plant"],
+            ["Zombies", "Zombie"],
+            ["Hypnotized Zombies", "HypnotizedZombie"],
+            ["Tombs", "Tomb"]
+        ],
+
+        DebugTypes: [
+            ["Success", "success"],
+            ["Information", "info"],
+            ["Warning", "warn"],
+            ["Error", "error"]
+        ]
+    }
 }
 
 const blockDefinitions = [
@@ -111,7 +149,7 @@ const blockDefinitions = [
                 name: "then"
             }
         ],
-        mutator: "optional_else_mutator",
+        mutator: "optional_else_statement_mutator",
         previousStatement: null,
         nextStatement: null,
         colour: "#e89e37"
@@ -136,7 +174,7 @@ const blockDefinitions = [
                 check: null
             }
         ],
-        mutator: "optional_else_mutator_ternary",
+        mutator: "optional_else_expression_mutator",
         output: "Any",
         colour: "#e89e37"
     },
@@ -460,7 +498,7 @@ const blockDefinitions = [
                 check: null
             }
         ],
-        mutator: "optional_min_max_properties",
+        mutator: "optional_min_max_mutator",
         inputsInline: false,
         previousStatement: null,
         nextStatement: null,
@@ -567,19 +605,8 @@ const blockDefinitions = [
             "Jalapeno Fire\n" +
             "Lawn Square %1" +
             "Damage %2" +
-            "Armor Protection %3" +
-            "Duration %4" +
-            "Fire Height %5" +
-            "Color %6\n" +
-            "Spread Pattern %7\n" +
-            "Spread Speed %8" +
-            "Spread Distance %9" +
-            "Zombie Whitelist %10" +
-            "Include Hypno %11" +
-            "Include Plants %12" +
-            "Is DPS %13" +
-            "Burn Flying %14" +
-            "Parent Object %15",
+            "Duration %3" +
+            "Spread Distance %4",
         args0: [
             {
                 type: "input_value",
@@ -593,80 +620,16 @@ const blockDefinitions = [
             },
             {
                 type: "input_value",
-                name: "armorProtection",
-                check: ["Boolean", "Any"]
-            },
-            {
-                type: "input_value",
                 name: "duration",
-                check: ["Number", "Any"]
-            },
-            {
-                type: "input_value",
-                name: "height",
-                check: ["Number", "Any"]
-            },
-            {
-                type: "field_dropdown",
-                name: "color",
-                options: [
-                    ["Yellow", "yellow"],
-                    ["Green", "green"],
-                    ["Right", "right"],
-                    ["Split", "split"]
-                ]
-            },
-            {
-                type: "field_dropdown",
-                name: "spreadStyle",
-                options: [
-                    ["Split", "split"],
-                    ["Left", "left"],
-                    ["Right", "right"],
-                    ["Split", "split"]
-                ]
-            },
-            {
-                type: "input_value",
-                name: "spreadSpeed",
                 check: ["Number", "Any"]
             },
             {
                 type: "input_value",
                 name: "spreadDistance",
                 check: ["Number", "Any"]
-            },
-            {
-                type: "input_value",
-                name: "zombieWhitelist",
-                check: ["Array", "Any"]
-            },
-            {
-                type: "input_value",
-                name: "hypnoIncluded",
-                check: ["Boolean", "Any"]
-            },
-            {
-                type: "input_value",
-                name: "plantsIncluded",
-                check: ["Boolean", "Any"]
-            },
-            {
-                type: "input_value",
-                name: "isDPS",
-                check: ["Boolean", "Any"]
-            },
-            {
-                type: "input_value",
-                name: "burnsFlying",
-                check: ["Boolean", "Any"]
-            },
-            {
-                type: "input_value",
-                name: "parentObject",
-                check: null
             }
         ],
+        mutator: "jalapeno_lane_fire_mutator",
         inputsInline: false,
         previousStatement: null,
         nextStatement: null,
@@ -757,12 +720,7 @@ const blockDefinitions = [
             {
                 type: "field_dropdown",
                 name: "objectType",
-                options: [
-                    ["Plants", "Plant"],
-                    ["Zombies", "Zombie"],
-                    ["Hypnotized Zombies", "HypnotizedZombie"],
-                    ["Tombs", "Tomb"]
-                ]
+                options: BlocklyConstants.DropDownOptions.ObjectTypes
             },
         ],
         inputsInline: true,
@@ -1238,13 +1196,7 @@ const blockDefinitions = [
             {
                 type: "field_dropdown",
                 name: "damageType",
-                options: [
-                    ["Physical", "physicle"],
-                    ["Fire", "fire"],
-                    ["Ray", "ray"],
-                    ["Electricity", "electricity"],
-                    ["Potato Mine", "potatoMine"],
-                ]
+                options: BlocklyConstants.DropDownOptions.DamageType
             },
             {
                 type: "input_value",
@@ -1302,6 +1254,28 @@ const blockDefinitions = [
         nextStatement: null,
         colour: "#607D8B"
     },
+    {
+        type: "ui_toast",
+        category: "Debug",
+        search_tags: ["logger", "print"],
+        message0: "UI Toast %1 %2",
+        args0: [
+            {
+                type: "field_dropdown",
+                name: "type",
+                options: BlocklyConstants.DropDownOptions.DebugTypes
+            },
+            {
+                type: "input_value",
+                name: "text",
+                check: null
+            },
+        ],
+        inputsInline: true,
+        previousStatement: null,
+        nextStatement: null,
+        colour: "#6696aa"
+    },
 ]
 
 for (const key of Object.keys(Blockly.Blocks)) {
@@ -1324,7 +1298,8 @@ function attachHighlightListener(workspace) {
             Blockly.Events.BLOCK_CREATE,
             Blockly.Events.BLOCK_DELETE,
             Blockly.Events.FINISHED_LOADING,
-        ];
+        ]
+
         if (triggers.includes(e.type)) {
             updateConnectionHighlights(workspace)
         }
@@ -1349,19 +1324,29 @@ const typeMap = {
 function getConnectionTypeLabel(connection) {
     const check = connection.getCheck()
     if (!check || check.length === 0) return "Any"
-    const specific = check.find(t => t !== "Any")
-    return typeMap[specific || check[0]][1]
+    const type = (check.find(t => t !== "Any") || check[0]) ?? "Any"
+
+    if (typeMap[type] === undefined) {
+        console.log(`Type ${type} doesn't exist in type map!`)
+    }
+
+    return (typeMap[type] || typeMap.Any)[1]
 }
 
 function getConnectionColor(connection) {
     const check = connection.getCheck()
     if (!check || check.length === 0) return typeMap.Any[0]
-    const specific = check.find(t => t !== "Any")
-    return (typeMap[specific || check[0]] || typeMap.Any)[0]
+    const type = (check.find(t => t !== "Any") || check[0]) ?? "Any"
+
+    if (typeMap[type] === undefined) {
+        console.log(`Type ${type} doesn't exist in type map!`)
+    }
+
+    return (typeMap[type] || typeMap.Any)[0]
 }
 
 function addConnectionSpacing(defs, spaces = 2) {
-    const pad = "\u00A0".repeat(spaces);
+    const pad = "\u00A0".repeat(spaces)
 
     for (const def of defs) {
         for (const msgKey of ["message0", "message1", "message2", "message3"]) {
@@ -1381,7 +1366,7 @@ function addConnectionSpacing(defs, spaces = 2) {
                 const m = tok.match(/^%(\d+)$/)
                 if (!m) {
                     newMsgParts.push(tok)
-                    continue;
+                    continue
                 }
                 const origArg = oldArgs[Number(m[1]) - 1]
 
@@ -1390,7 +1375,7 @@ function addConnectionSpacing(defs, spaces = 2) {
                         type: "field_label",
                         name: `__spacer${argCounter}`,
                         text: pad
-                    });
+                    })
                     newMsgParts.push(`%${argCounter}`)
                     argCounter++
                 }

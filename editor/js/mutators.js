@@ -270,405 +270,342 @@ Blockly.Extensions.registerMutator("properties_mutator", {
     "properties_mutator_entry_field"
 ])
 
-Blockly.defineBlocksWithJsonArray([
+function createToggleInputMutator(
     {
-        type: "optional_default_mutator_container",
-        message0: "Include Default %1",
-        args0: [{ type: "field_checkbox", name: "DEFAULT", checked: false }],
-        colour: "#554f92"
+        id,
+        colour,
+        title,
+        inputs
     }
-])
+) {
+    Blockly.defineBlocksWithJsonArray([{
+        type: `${id}_container`,
+        message0: title,
+        args0: inputs.map(input => ({
+            type: "field_checkbox",
+            name: input.id,
+            checked: !!input.default
+        })),
+        colour
+    }])
 
-Blockly.Extensions.registerMutator("optional_default_mutator", {
-    hasDefault_: false,
+    Blockly.Extensions.registerMutator(`${id}_mutator`, {
+        saveExtraState() {
+            const state = {}
 
-    saveExtraState() {
-        return { hasDefault: this.hasDefault_ }
-    },
-
-    loadExtraState(state) {
-        this.hasDefault_ = !!state.hasDefault
-        this.updateShape_()
-    },
-
-    decompose(workspace) {
-        const containerBlock = workspace.newBlock("optional_default_mutator_container")
-        containerBlock.initSvg()
-        containerBlock.setFieldValue(this.hasDefault_ ? "TRUE" : "FALSE", "DEFAULT")
-        return containerBlock
-    },
-
-    compose(containerBlock) {
-        this.hasDefault_ = containerBlock.getFieldValue("DEFAULT") === "TRUE"
-        this.updateShape_()
-    },
-
-    updateShape_() {
-        const input = this.getInput("default")
-
-        if (this.hasDefault_ && !input) {
-            this.appendValueInput("default").appendField("Default Value")
-        } else if (!this.hasDefault_ && input) {
-            const targetBlock = input.connection && input.connection.targetBlock()
-            if (targetBlock) targetBlock.dispose(true, true)
-            this.removeInput("default")
-        }
-    }
-})
-
-
-Blockly.defineBlocksWithJsonArray([
-    {
-        type: "optional_min_max_properties_container",
-        message0: "Include Min %1 Include Max %2",
-        args0: [
-            {
-                type: "field_checkbox",
-                name: "MIN",
-                checked: false
-            },
-            {
-                type: "field_checkbox",
-                name: "MAX",
-                checked: false
+            for (const input of inputs) {
+                state[input.id] = !!this[input.id]
             }
-        ],
-        colour: "#554f92"
-    }
-])
 
-Blockly.Extensions.registerMutator("optional_min_max_properties", {
-    hasMin_: false,
-    hasMax_: false,
+            return state
+        },
 
-    saveExtraState() {
-        return {
-            hasMin: this.hasMin_,
-            hasMax: this.hasMax_
-        }
-    },
+        loadExtraState(state) {
+            for (const input of inputs) {
+                this[input.id] = !!state[input.id]
+            }
 
-    loadExtraState(state) {
-        this.hasMin_ = !!state.hasMin
-        this.hasMax_ = !!state.hasMax
-        this.updateShape_()
-    },
+            this.updateShape_()
+        },
 
-    decompose(workspace) {
-        const container = workspace.newBlock("optional_min_max_properties_container")
-        container.initSvg()
+        decompose(workspace) {
+            const container = workspace.newBlock(`${id}_container`)
+            container.initSvg()
 
-        container.setFieldValue(this.hasMin_ ? "TRUE" : "FALSE", "MIN")
-        container.setFieldValue(this.hasMax_ ? "TRUE" : "FALSE", "MAX")
+            for (const input of inputs) {
+                container.setFieldValue(
+                    this[input.id] ? "TRUE" : "FALSE",
+                    input.id
+                )
+            }
 
-        return container
-    },
+            return container
+        },
 
-    compose(container) {
-        this.hasMin_ = container.getFieldValue("MIN") === "TRUE"
-        this.hasMax_ = container.getFieldValue("MAX") === "TRUE"
+        compose(container) {
+            for (const input of inputs) {
+                this[input.id] =
+                    container.getFieldValue(input.id) === "TRUE"
+            }
 
-        this.updateShape_()
-    },
+            this.updateShape_()
+        },
 
-    updateShape_() {
-        const updateInput = (name, label, enabled) => {
-            const input = this.getInput(name)
+        updateShape_() {
+            for (const config of inputs) {
+                const input = this.getInput(config.id)
 
-            if (enabled && !input) {
-                this.appendValueInput(name)
-                    .appendField(label)
-            } else if (!enabled && input) {
-                const target = input.connection?.targetBlock()
-                if (target) {
-                    target.dispose(true, true)
+                if (this[config.id]) {
+                    if (!input) {
+                        config.create(this)
+                    }
+                } else if (input) {
+                    const connection = input.connection?.targetConnection
+
+                    if (connection) {
+                        connection.disconnect()
+                        connection.getSourceBlock().bumpNeighbours()
+                    }
+
+                    this.removeInput(config.id)
                 }
-                this.removeInput(name)
             }
         }
+    })
+}
 
-        updateInput("min", "Min", this.hasMin_)
-        updateInput("max", "Max", this.hasMax_)
+function createOptionalInputMutator(
+    {
+        id,
+        colour,
+        title,
+        options
     }
-})
+) {
+    Blockly.Blocks[`${id}_mutator_container`] = {
+        init() {
+            this.appendDummyInput()
+                .appendField(title)
 
-Blockly.Blocks["explode_cherry_bomb_mutator_container"] = {
-    init() {
-        this.appendDummyInput()
-            .appendField("Explosion Properties")
+            this.appendStatementInput("STACK")
 
-        this.appendStatementInput("STACK")
+            this.setColour(colour)
+            this.contextMenu = false
+        }
+    }
 
-        this.setColour("#e33b3b")
+    Blockly.defineBlocksWithJsonArray(
+        options.map(option => ({
+            type: `${id}_mutator_item_${option.id}`,
+            message0: option.label,
+            previousStatement: null,
+            nextStatement: null,
+            colour
+        }))
+    )
 
-        this.contextMenu = false
+    function optionFromBlockType(type) {
+        return type.substring(`${id}_mutator_item_`.length)
+    }
+
+    const mutator = {
+        saveExtraState() {
+            return {
+                options: this.optionalInputs_ ?? []
+            }
+        },
+
+        loadExtraState(state) {
+            this.optionalInputs_ = state.options ?? []
+            this.updateShape_()
+        },
+
+        saveConnections(container) {
+            let item = container.getInputTargetBlock("STACK")
+
+            while (item) {
+                const option = optionFromBlockType(item.type)
+                const input = this.getInput(option)
+
+                item.valueConnection_ = input?.connection?.targetConnection
+
+                item = item.nextConnection?.targetBlock()
+            }
+        },
+
+        decompose(workspace) {
+            this.optionalInputs_ ??= []
+
+            const container = workspace.newBlock(`${id}_mutator_container`)
+            container.initSvg()
+
+            let connection = container.getInput("STACK").connection
+
+            for (const option of this.optionalInputs_) {
+                const block = workspace.newBlock(`${id}_mutator_item_${option}`)
+                block.initSvg()
+
+                connection.connect(block.previousConnection)
+                connection = block.nextConnection
+            }
+
+            return container
+        },
+
+        compose(container) {
+            const connections = {}
+            let item = container.getInputTargetBlock("STACK")
+
+            while (item) {
+                const option = optionFromBlockType(item.type)
+                connections[option] = item.valueConnection_
+                item = item.nextConnection?.targetBlock()
+            }
+
+            this.optionalInputs_ = Object.keys(connections)
+
+            this.updateShape_()
+
+            for (const [option, connection] of Object.entries(connections)) {
+                if (!connection) continue
+
+                try {
+                    this.getInput(option)?.connection?.connect(connection)
+                } catch {}
+            }
+        },
+
+        updateShape_() {
+            for (const option of options) {
+                if (this.optionalInputs_.includes(option.id)) {
+                    if (!this.getInput(option.id)) {
+                        option.create(this)
+                    }
+                } else {
+                    const input = this.getInput(option.id)
+                    if (!input) continue
+
+                    input.connection?.targetBlock()?.dispose(true, true)
+                    this.removeInput(option.id)
+                }
+            }
+        },
+
+        setOptionalInputs_(data) {
+            this.optionalInputs_ = options
+                .filter(option => data[option.id] !== undefined)
+                .map(option => option.id)
+
+            this.updateShape_()
+        }
+    }
+
+    Blockly.Extensions.registerMutator(
+        `${id}_mutator`,
+        mutator,
+        undefined,
+        options.map(option => `${id}_mutator_item_${option.id}`)
+    )
+}
+
+function createValueInput(id, label, check) {
+    return {
+        id: id,
+        label,
+        create(block) {
+            block.appendValueInput(this.id)
+                .setCheck([check, "Any"])
+                .appendField(label)
+        }
     }
 }
+
+function createDropdownInput(id, label, options) {
+    return {
+        id: id,
+        label,
+        create(block) {
+            block.appendDummyInput(this.id)
+                .appendField(label)
+                .appendField(
+                    new Blockly.FieldDropdown(options),
+                    this.id
+                )
+        }
+    }
+}
+
+function createStatementInput(id, label) {
+    return {
+        id,
+        label,
+        create(block) {
+            block.appendStatementInput(this.id)
+                .appendField(label)
+        }
+    }
+}
+
+createToggleInputMutator({
+    id: "optional_default",
+    colour: "#554f92",
+    title: "Include Default Value %1",
+    inputs: [
+        createValueInput("default", "Default Value", null)
+    ]
+})
+
+createToggleInputMutator({
+    id: "optional_min_max",
+    colour: "#554f92",
+    title: "Include Min %1 Max %2",
+    inputs: [
+        createValueInput("min", "Min", null),
+        createValueInput("max", "Max", null)
+    ]
+})
+
+createToggleInputMutator({
+    id: "optional_else_statement",
+    colour: "#554f92",
+    title: "Include Else %1",
+    inputs: [
+        createStatementInput("else", "else")
+    ]
+})
+
+createToggleInputMutator({
+    id: "optional_else_expression",
+    colour: "#554f92",
+    title: "Include Else %1",
+    inputs: [
+        createValueInput("else", "else", null)
+    ]
+})
 
 const explodeOptions = [
-    ["Color", "color", "Color"],
-    ["Scale", "scale", "Vec2"],
-    ["Explosion Width", "explosionWidth", "Number"],
-    ["Explosion Height", "explosionHeight", "Number"],
-    ["Explosion Lanes", "explosionLanes", "Array"],
-    ["X Offset", "xOffset", "Number"],
-    ["Y Offset", "yOffset", "Number"],
-    ["Armor Protection", "armorProtection", "Boolean"],
-    ["Armor Knock Sound", "armorKnockSound", "Boolean"],
-    ["Body Knock Sound", "bodyKnockSound", "Boolean"],
-    ["Damage Type", "damageType", "Text"],
-    ["Screen Shake Duration", "screenShakeDuration", "Number"],
-    ["Position Override", "positionOverride", "Vec3"],
-    ["Play Sound", "playSound", "Boolean"],
-    ["Show Explosion Text", "showExplosionText", "Boolean"],
-    ["Zombie Callback", "zombieCallback", "_statement"],
+    createValueInput("color", "Color", "Color"),
+    createValueInput("scale", "Scale", "Vec2"),
+    createValueInput("explosionWidth", "Explosion Width", "Number"),
+    createValueInput("explosionHeight", "Explosion Height", "Number"),
+    createValueInput("explosionLanes", "Explosion Lanes", "Array"),
+    createValueInput("xOffset", "X Offset", "Number"),
+    createValueInput("yOffset", "Y Offset", "Number"),
+    createValueInput("armorProtection", "Armor Protection", "Boolean"),
+    createValueInput("armorKnockSound", "Armor Knock Sound", "Boolean"),
+    createValueInput("bodyKnockSound", "Body Knock Sound", "Boolean"),
+    createDropdownInput("damageType", "Damage Type", BlocklyConstants.DropDownOptions.DamageType),
+    createValueInput("screenShakeDuration", "Screen Shake Duration", "Number"),
+    createValueInput("positionOverride", "Position Override", "Vec3"),
+    createValueInput("playSound", "Play Sound", "Boolean"),
+    createValueInput("showExplosionText", "Show Explosion Text", "Boolean"),
+    createStatementInput("zombieCallback", "Zombie Callback")
 ]
 
-const optionMap = Object.fromEntries(
-    explodeOptions.map(([label, value, check]) => [
-        value,
-        { label, check }
-    ])
-)
-
-Blockly.defineBlocksWithJsonArray(
-    explodeOptions.map(([label, value]) => ({
-        type: `explode_cherry_bomb_mutator_item_${value}`,
-        message0: label,
-        previousStatement: null,
-        nextStatement: null,
-        colour: "#e33b3b"
-    }))
-)
-
-function explodeOptionFromBlockType(type) {
-    return type.replace("explode_cherry_bomb_mutator_item_", "")
-}
-
-const explodeCherryBombMutator = {
-    saveExtraState() {
-        return {
-            options: this.explodeOptions_
-        }
-    },
-
-    loadExtraState(state) {
-        this.explodeOptions_ = state.options ?? []
-        this.updateShape_()
-    },
-
-    saveConnections(container) {
-        let item = container.getInputTargetBlock("STACK")
-
-        while (item) {
-            const option = explodeOptionFromBlockType(item.type)
-            const input = this.getInput(option)
-
-            item.valueConnection_ = input?.connection.targetConnection
-
-            item = item.nextConnection?.targetBlock()
-        }
-    },
-
-    decompose(workspace) {
-        const container = workspace.newBlock("explode_cherry_bomb_mutator_container")
-        container.initSvg()
-
-        let connection = container.getInput("STACK").connection
-
-        for (const option of this.explodeOptions_) {
-            const block = workspace.newBlock(
-                `explode_cherry_bomb_mutator_item_${option}`
-            )
-
-            block.initSvg()
-
-            connection.connect(block.previousConnection)
-            connection = block.nextConnection
-        }
-
-        return container
-    },
-
-    compose(container) {
-        const oldConnections = {}
-
-        let item = container.getInputTargetBlock("STACK")
-        while (item) {
-            const option = explodeOptionFromBlockType(item.type)
-            oldConnections[option] = item.valueConnection_
-            item = item.nextConnection?.targetBlock()
-        }
-
-        this.explodeOptions_ = Object.keys(oldConnections)
-
-        this.updateShape_()
-
-        for (const [option, connection] of Object.entries(oldConnections)) {
-            if (!connection) continue
-
-            try {
-                this.getInput(option)?.connection.connect(connection)
-            } catch {}
-        }
-    },
-
-    updateShape_() {
-        for (const [input, {label, check}] of Object.entries(optionMap)) {
-            if (this.explodeOptions_.includes(input)) {
-                if (!this.getInput(input)) {
-                    if (check === "_statement") {
-                        this.appendStatementInput(input)
-                            .appendField(label)
-                    } else {
-                        this.appendValueInput(input)
-                            .setCheck(check ? [check, "Any"] : null)
-                            .appendField(label)
-                    }
-                }
-            } else {
-                const existing = this.getInput(input)
-                if (existing) {
-                    if (check === "_statement") {
-                        existing.connection.targetBlock()?.dispose(true, true)
-                    } else {
-                        existing.connection.targetBlock()?.dispose(true, true)
-                    }
-                    this.removeInput(input)
-                }
-            }
-        }
-    }
-}
-
-Blockly.Extensions.registerMutator(
-    "explode_cherry_bomb_mutator",
-    explodeCherryBombMutator,
-    undefined,
-    explodeOptions.map(
-        ([, value]) => `explode_cherry_bomb_mutator_item_${value}`
-    )
-)
-
-Blockly.defineBlocksWithJsonArray([
-    {
-        type: "optional_else_mutator_container",
-        message0: "Include Else %1",
-        args0: [
-            {
-                type: "field_checkbox",
-                name: "ELSE",
-                checked: true
-            }
-        ],
-        colour: "#554f92"
-    }
-])
-
-Blockly.Extensions.registerMutator("optional_else_mutator", {
-    hasElse_: true,
-
-    saveExtraState() {
-        return {
-            hasElse: this.hasElse_
-        }
-    },
-
-    loadExtraState(state) {
-        this.hasElse_ = state?.hasElse ?? true
-        this.updateShape_()
-    },
-
-    decompose(workspace) {
-        const container = workspace.newBlock("optional_else_mutator_container")
-        container.initSvg()
-
-        container.setFieldValue(
-            this.hasElse_ ? "TRUE" : "FALSE",
-            "ELSE"
-        )
-
-        return container
-    },
-
-    compose(container) {
-        this.hasElse_ =
-            container.getFieldValue("ELSE") === "TRUE"
-
-        this.updateShape_()
-    },
-
-    updateShape_() {
-        const input = this.getInput("else")
-
-        if (this.hasElse_) {
-            if (!input) {
-                this.appendStatementInput("else")
-                    .appendField("else")
-            }
-        } else if (input) {
-            const connection = input.connection.targetConnection
-
-            if (connection) {
-                connection.disconnect()
-                connection.getSourceBlock().bumpNeighbours()
-            }
-
-            this.removeInput("else")
-        }
-    }
+createOptionalInputMutator({
+    id: "explode_cherry_bomb",
+    title: "Explosion Properties",
+    colour: "#e33b3b",
+    options: explodeOptions
 })
 
-Blockly.Extensions.registerMutator("optional_else_mutator_ternary", {
-    hasElse_: true,
+const jalapenoLaneFireOptions = [
+    createValueInput("armorProtection", "Armor Protection", "Boolean"),
+    createValueInput("height", "Fire Height", "Number"),
+    createDropdownInput("color", "Color", BlocklyConstants.DropDownOptions.JalapenoFireColor),
+    createDropdownInput("spreadStyle", "Spread Pattern", BlocklyConstants.DropDownOptions.JalapenoSpreadPattern),
+    createValueInput("spreadSpeed", "Spread Speed", "Number"),
+    createValueInput("zombieWhitelist", "Zombie Whitelist", "Array"),
+    createValueInput("hypnoIncluded", "Include Hypno", "Boolean"),
+    createValueInput("plantsIncluded", "Include Plants", "Boolean"),
+    createValueInput("isDPS", "Is DPS", "Boolean"),
+    createValueInput("burnsFlying", "Burn Flying", "Boolean"),
+    createValueInput("parentObject", "Parent Object", null)
+]
 
-    saveExtraState() {
-        return {
-            hasElse: this.hasElse_
-        }
-    },
-
-    loadExtraState(state) {
-        this.hasElse_ = state?.hasElse ?? true
-        this.updateShape_()
-    },
-
-    decompose(workspace) {
-        const container = workspace.newBlock("optional_else_mutator_container")
-        container.initSvg()
-
-        container.setFieldValue(
-            this.hasElse_ ? "TRUE" : "FALSE",
-            "ELSE"
-        )
-
-        return container
-    },
-
-    compose(container) {
-        this.hasElse_ =
-            container.getFieldValue("ELSE") === "TRUE"
-
-        this.updateShape_()
-    },
-
-    updateShape_() {
-        const input = this.getInput("else")
-
-        if (this.hasElse_) {
-            if (!input) {
-                this.appendValueInput("else")
-                    .appendField("else")
-            }
-        } else if (input) {
-            const connection = input.connection.targetConnection
-
-            if (connection) {
-                connection.disconnect()
-                connection.getSourceBlock().bumpNeighbours()
-            }
-
-            this.removeInput("else")
-        }
-    }
+createOptionalInputMutator({
+    id: "jalapeno_lane_fire",
+    title: "Jalapeno Fire Properties",
+    colour: "#d64b35",
+    options: jalapenoLaneFireOptions
 })

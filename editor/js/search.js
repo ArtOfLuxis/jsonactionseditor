@@ -45,7 +45,7 @@ function getSearchText(type, def) {
     return parts
         .join("")
         .replace(/%[0-9]+/g, "")
-        .toLowerCase();
+        .toLowerCase()
 }
 
 let currentSearch = []

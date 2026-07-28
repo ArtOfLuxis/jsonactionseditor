@@ -770,6 +770,13 @@ function compile(block) {
                     values: [compile(block.getInputTargetBlock("value"))],
                 }
             }
+            case "ui_toast": {
+                return {
+                    kind: "UIToast",
+                    text: compile(block.getInputTargetBlock("text")),
+                    type: compile(block.getInputTargetBlock("type")),
+                }
+            }
 
             default:
                 logger(`Unknown block type: ${block.type}`, "error")

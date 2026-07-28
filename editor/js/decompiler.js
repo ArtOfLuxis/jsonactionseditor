@@ -41,6 +41,13 @@ function createBlockFromJson(data, workspace) {
             createValueInput(block, "value", data.values[0])
             break
 
+        case "UIToast":
+            block = newBlock("ui_toast", workspace)
+
+            createValueInput(block, "text", data.text)
+            block.setFieldValue(data.type, "type")
+            break
+
         case "Sleep":
             block = newBlock("sleep", workspace)
 
@@ -111,11 +118,7 @@ function createBlockFromJson(data, workspace) {
         case "ExplodeCherryBomb": {
             block = newBlock("explode_cherry_bomb", workspace)
 
-            block.explodeOptions_ = explodeOptions
-                .map(([, key]) => key)
-                .filter(key => data[key] !== undefined)
-
-            block.updateShape_()
+            block.setOptionalInputs_(data)
 
             createValueInput(block, "lnc", data.lnc)
             createValueInput(block, "damage", data.damage)
@@ -151,6 +154,8 @@ function createBlockFromJson(data, workspace) {
 
         case "SpawnLaneFire": {
             block = newBlock("spawn_lane_fire", workspace)
+
+            block.setOptionalInputs_(data)
 
             createValueInput(block, "lnc", data.lnc)
             createValueInput(block, "damage", data.damage)
