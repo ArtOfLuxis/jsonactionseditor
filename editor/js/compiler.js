@@ -241,18 +241,6 @@ function compile(block) {
                     else: compile(block.getInputTargetBlock("else"))
                 }
             }
-            case "logic_not": {
-                const value = compile(block.getInputTargetBlock("value"))
-
-                if (typeof value === "boolean") {
-                    return !value
-                }
-
-                return {
-                    kind: "not",
-                    value,
-                }
-            }
             case "logic_operation": {
                 const left = compile(block.getInputTargetBlock("left"))
                 const operator = block.getFieldValue("operator")
@@ -310,6 +298,24 @@ function compile(block) {
                     right
                 }
             }
+            case "logic_not": {
+                const value = compile(block.getInputTargetBlock("value"))
+
+                if (typeof value === "boolean") {
+                    return !value
+                }
+
+                return {
+                    kind: "not",
+                    value,
+                }
+            }
+            case "logic_random_chance": {
+                return {
+                    kind: "MathRandomChance",
+                    chance: compile(block.getInputTargetBlock("chance")),
+                }
+            }
 
 
             // Math
@@ -346,6 +352,14 @@ function compile(block) {
                     left,
                     kind: operator,
                     right
+                }
+            }
+
+            case "math_random": {
+                return {
+                    kind: "MathRandomRange",
+                    min: compile(block.getInputTargetBlock("min")),
+                    max: compile(block.getInputTargetBlock("max")),
                 }
             }
 
@@ -484,7 +498,7 @@ function compile(block) {
             }
 
 
-            // Gameplay
+            // Zombies
             case "deal_damage_zombie": {
                 const zombie = compile(block.getInputTargetBlock("zombie"))
                 const damageDetails = compile(block.getInputTargetBlock("damageDetails"))
@@ -495,6 +509,9 @@ function compile(block) {
                     damageDetails
                 }
             }
+
+
+            // Plants
             case "deal_damage_plant": {
                 const plant = compile(block.getInputTargetBlock("plant"))
                 const damage = compile(block.getInputTargetBlock("damage"))
@@ -647,6 +664,9 @@ function compile(block) {
 
 
             // Advanced
+            case "math_object": {
+                return { kind: "GetMath" }
+            }
             case "invoke_constructor": {
                 const object = compile(block.getInputTargetBlock("object"))
                 const args = compile(block.getInputTargetBlock("args"))
@@ -684,6 +704,7 @@ function compile(block) {
             case "number":
                 return Number(block.getFieldValue("value"))
             case "text":
+            case "multiline_text":
                 return String(block.getFieldValue("value"))
             case "boolean":
                 return block.getFieldValue("value") === "true"
@@ -759,7 +780,9 @@ function compile(block) {
                     flash: compile(block.getInputTargetBlock("flash")),
                     armorAlsoDamagedWhenNotProtecting: compile(
                         block.getInputTargetBlock("armorAlsoDamagedWhenNotProtecting")
-                    )
+                    ),
+                    bugKiller: compile(block.getInputTargetBlock("bugKiller")),
+                    balloonKiller: compile(block.getInputTargetBlock("balloonKiller")),
                 }
 
 

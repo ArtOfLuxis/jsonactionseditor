@@ -42,6 +42,10 @@ function getSearchText(type, def) {
         parts.push(def.category)
     }
 
+    if (def.output) {
+        parts.push(def.output)
+    }
+
     return parts
         .join("")
         .replace(/%[0-9]+/g, "")

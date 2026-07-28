@@ -183,7 +183,6 @@ function createBlockFromJson(data, workspace) {
             createValueInput(block, "rectangle2", data.rectangle2)
             break
 
-
         case "InvokeObjectMethod": {
             if (data.method === "explodeCherry3x3" && data.args?.length <= 2) {
                 block = newBlock("explode_cherry_bomb", workspace)
@@ -274,6 +273,26 @@ function createValueBlock(value, workspace) {
                 return block
             }
 
+            case "MathRandomChance": {
+                const block = newBlock("logic_random_chance", workspace)
+
+                createValueInput(block, "chance", value.chance)
+
+                return block
+            }
+
+            case "MathRandomRange": {
+                const block = newBlock("math_random", workspace)
+
+                createValueInput(block, "min", value.min)
+                createValueInput(block, "max", value.max)
+
+                return block
+            }
+
+            case "GetMath": {
+                return newBlock("get_math", workspace)
+            }
             case "InvokeConstructor": {
                 const block = newBlock("invoke_constructor", workspace)
 
@@ -497,6 +516,8 @@ function createValueBlock(value, workspace) {
                 createValueInput(block, "damageDirection", value.damageDirection)
                 createValueInput(block, "flash", value.flash)
                 createValueInput(block, "armorAlsoDamagedWhenNotProtecting", value.armorAlsoDamagedWhenNotProtecting)
+                createValueInput(block, "bugKiller", value.bugKiller)
+                createValueInput(block, "balloonKiller", value.balloonKiller)
 
                 return block
             }

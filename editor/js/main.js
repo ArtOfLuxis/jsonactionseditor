@@ -24,7 +24,6 @@ const shadowProperties = {
     "text": {
         "property": [
             "set_object_property",
-            "set_object_properties",
             "get_object_property",
             "modify_object_property"
         ],

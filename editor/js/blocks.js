@@ -14,6 +14,11 @@ function getInlineVariables() {
 
 const BlocklyConstants = {
     DropDownOptions: {
+        MathRoundingType: [
+            ["Default", "default"],
+            ["Ceil", "ceil"],
+            ["Floor", "floor"]
+        ],
         DamageType: [
             ["Physical", "physicle"],
             ["Fire", "fire"],
@@ -256,6 +261,22 @@ const blockDefinitions = [
         output: "Boolean",
         colour: "#d99132"
     },
+    {
+        type: "logic_random_chance",
+        category: "Logic",
+        search_tags: ["condition"],
+        message0: "Random Chance %1%",
+        args0: [
+            {
+                type: "input_value",
+                name: "chance",
+                check: ["Number", "Any"]
+            }
+        ],
+        inputsInline: true,
+        output: "Boolean",
+        colour: "#7668a8"
+    },
 
 
 
@@ -293,6 +314,27 @@ const blockDefinitions = [
         inputsInline: true,
         output: "Number",
         colour: "#4670b6"
+    },
+    {
+        type: "math_random",
+        category: "Math",
+        search_tags: [],
+        message0: "Random\nMin %1 Max %2",
+        args0: [
+            {
+                type: "input_value",
+                name: "min",
+                check: ["Number", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "max",
+                check: ["Number", "Any"]
+            }
+        ],
+        inputsInline: false,
+        output: "Number",
+        colour: "#6f68a8"
     },
 
 
@@ -529,10 +571,10 @@ const blockDefinitions = [
 
 
 
-    // Gameplay
+    // Zombies
     {
         type: "deal_damage_zombie",
-        category: "Gameplay",
+        category: "Zombies",
         search_tags: [],
         message0: "Deal Damage to a Zombie\n Damage Details %1 Zombie %2",
         args0: [
@@ -552,9 +594,13 @@ const blockDefinitions = [
         nextStatement: null,
         colour: "#ca784b"
     },
+
+
+
+    // Plants
     {
         type: "deal_damage_plant",
-        category: "Gameplay",
+        category: "Plants",
         search_tags: [],
         message0: "Deal Damage to a Plant\n Damage %1 Plant %2",
         args0: [
@@ -576,7 +622,7 @@ const blockDefinitions = [
     },
     {
         type: "explode_cherry_bomb",
-        category: "Gameplay",
+        category: "Plants",
         search_tags: ["explosion"],
         message0: "Cherry Explosion\nLawn Square %1 Damage %2",
         args0: [
@@ -599,7 +645,7 @@ const blockDefinitions = [
     },
     {
         type: "spawn_lane_fire",
-        category: "Gameplay",
+        category: "Plants",
         search_tags: [],
         message0:
             "Jalapeno Fire\n" +
@@ -875,6 +921,16 @@ const blockDefinitions = [
 
     // Advanced
     {
+        type: "math_object",
+        category: "Advanced",
+        search_tags: [],
+        message0: "JavaScript Math Object",
+        args0: [],
+        inputsInline: true,
+        output: null,
+        colour: "#ac87dc"
+    },
+    {
         type: "invoke_constructor",
         category: "Advanced",
         search_tags: [],
@@ -971,7 +1027,7 @@ const blockDefinitions = [
     {
         type: "number",
         category: "Primitives",
-        search_tags: ["primitive", "math"],
+        search_tags: ["math"],
         message0: "Number %1",
         args0: [
             {
@@ -986,7 +1042,7 @@ const blockDefinitions = [
     {
         type: "text",
         category: "Primitives",
-        search_tags: ["primitive", "string"],
+        search_tags: ["string"],
         message0: "Text %1",
         args0: [
             {
@@ -999,9 +1055,24 @@ const blockDefinitions = [
         colour: "#e59451"
     },
     {
+        type: "multiline_text",
+        category: "Primitives",
+        search_tags: ["string"],
+        message0: "Multiline Text %1",
+        args0: [
+            {
+                type: "field_multiline_text",
+                name: "value",
+                value: ""
+            }
+        ],
+        output: "Text",
+        colour: "#e59451"
+    },
+    {
         type: "boolean",
         category: "Primitives",
-        search_tags: ["primitive", "condition"],
+        search_tags: ["condition"],
         message0: "Boolean %1",
         args0: [
             {
@@ -1030,7 +1101,7 @@ const blockDefinitions = [
     {
         type: "null",
         category: "Primitives",
-        search_tags: ["list"],
+        search_tags: ["none", "undefined"],
         message0: "Null",
         args0: [],
         inputsInline: false,
@@ -1186,7 +1257,7 @@ const blockDefinitions = [
         type: "zombie_damage_details",
         category: "Values",
         search_tags: [],
-        message0: "Zombie Damage Details\n Damage %1 Damage Type %2\n Armor Protection %3 Armor Knock Sound %4 Body Knock Sound %5 Flash %6 Always Damage Armor %7 Damage Direction %8",
+        message0: "Zombie Damage Details\n Damage %1 Damage Type %2\n Armor Protection %3 Armor Knock Sound %4 Body Knock Sound %5 Flash %6 Always Damage Armor %7 Damage Direction %8 Bug Killer %9 Balloon Killer %10",
         args0: [
             {
                 type: "input_value",
@@ -1227,6 +1298,16 @@ const blockDefinitions = [
                 type: "input_value",
                 name: "damageDirection",
                 check: ["Vec2", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "bugKiller",
+                check: ["Boolean", "Any"]
+            },
+            {
+                type: "input_value",
+                name: "balloonKiller",
+                check: ["Boolean", "Any"]
             },
         ],
         inputsInline: false,
