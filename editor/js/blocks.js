@@ -12,7 +12,7 @@ function getInlineVariables() {
     return vars.length ? vars : [["<none>", ""]]
 }
 
-const BlocklyConstants = {
+const BlockConstants = {
     DropDownOptions: {
         MathRoundingType: [
             ["Default", "default"],
@@ -363,25 +363,25 @@ const blockDefinitions = [
         colour: "#6f68a8"
     },
     {
-        type: "math_random",
+        type: "math_round",
         category: "Math",
         search_tags: [],
-        message0: "Random\nMin %1 Max %2",
+        message0: "Round Number\nType %1\n Number %2",
         args0: [
             {
-                type: "input_value",
-                name: "min",
-                check: ["Number", "Any"]
+                type: "field_dropdown",
+                name: "rounding",
+                options: BlockConstants.DropDownOptions.MathRoundingType
             },
             {
                 type: "input_value",
-                name: "max",
+                name: "number",
                 check: ["Number", "Any"]
             }
         ],
         inputsInline: false,
         output: "Number",
-        colour: "#6f68a8"
+        colour: "#5242c6"
     },
 
 
@@ -813,7 +813,7 @@ const blockDefinitions = [
             {
                 type: "field_dropdown",
                 name: "objectType",
-                options: BlocklyConstants.DropDownOptions.ObjectTypes
+                options: BlockConstants.DropDownOptions.ObjectTypes
             },
         ],
         inputsInline: true,
@@ -1314,7 +1314,7 @@ const blockDefinitions = [
             {
                 type: "field_dropdown",
                 name: "damageType",
-                options: BlocklyConstants.DropDownOptions.DamageType
+                options: BlockConstants.DropDownOptions.DamageType
             },
             {
                 type: "input_value",
@@ -1391,7 +1391,7 @@ const blockDefinitions = [
             {
                 type: "field_dropdown",
                 name: "type",
-                options: BlocklyConstants.DropDownOptions.DebugTypes
+                options: BlockConstants.DropDownOptions.DebugTypes
             },
             {
                 type: "input_value",

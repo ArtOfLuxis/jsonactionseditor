@@ -371,6 +371,14 @@ function compile(block) {
                 }
             }
 
+            case "math_round": {
+                return {
+                    kind: "MathRound",
+                    rounding: block.getFieldValue("rounding"),
+                    number: compile(block.getInputTargetBlock("number")),
+                }
+            }
+
 
             // Variables
             case "define_inline_variable": {

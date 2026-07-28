@@ -297,6 +297,15 @@ function createValueBlock(value, workspace) {
                 return block
             }
 
+            case "MathRound": {
+                const block = newBlock("math_round", workspace)
+
+                createValueInput(block, "rounding", value.rounding)
+                createValueInput(block, "number", value.number)
+
+                return block
+            }
+
             case "GetMath": {
                 return newBlock("get_math", workspace)
             }
