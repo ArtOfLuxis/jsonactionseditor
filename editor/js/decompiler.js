@@ -183,6 +183,10 @@ function createBlockFromJson(data, workspace) {
             break
         }
 
+        case "GetCurrentSunCount":
+            block = newBlock("get_current_sun_count", workspace)
+            break
+
         case "RectangleIntersectsRectangle":
             block = newBlock("rectangle_intersects_rectangle", workspace)
 

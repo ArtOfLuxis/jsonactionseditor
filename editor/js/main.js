@@ -32,7 +32,8 @@ const shadowProperties = {
             "invoke_object_method_expression",
         ],
         "variable": [
-            "for_loop"
+            "for_loop",
+            "repeat",
         ],
         "name": [
             "get_context_object",

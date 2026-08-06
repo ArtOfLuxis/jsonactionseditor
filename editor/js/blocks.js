@@ -730,6 +730,20 @@ const blockDefinitions = [
     },
 
 
+
+    // Gameplay
+    {
+        type: "get_current_sun_count",
+        category: "Gameplay",
+        search_tags: [],
+        message0: "Current Sun Bank Count",
+        args0: [],
+        inputsInline: false,
+        output: "Number",
+        colour: "#e1bf2e"
+    },
+
+
     // Hitboxes
     {
         type: "rectangle_intersects_rectangle",

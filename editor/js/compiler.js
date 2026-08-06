@@ -585,6 +585,12 @@ function compile(block) {
             }
 
 
+            // Gameplay
+            case "get_current_sun_count": {
+                return { "kind": "GetCurrentSunCount" }
+            }
+
+
             // Hitboxes
             case "rectangle_intersects_rectangle": {
                 const rectangle1 = compile(block.getInputTargetBlock("rectangle1"))
