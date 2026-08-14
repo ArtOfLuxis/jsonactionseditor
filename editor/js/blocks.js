@@ -740,7 +740,7 @@ const blockDefinitions = [
         args0: [],
         inputsInline: false,
         output: "Number",
-        colour: "#e1bf2e"
+        colour: "#caae2d"
     },
 
 

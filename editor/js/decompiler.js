@@ -202,9 +202,6 @@ function createBlockFromJson(data, workspace) {
                 createValueInput(block, "damage", data.args[0] ?? 1800)
 
                 if (typeof data.args[1] === "boolean") {
-                    block.explodeOptions_ = ["showExplosionText"]
-                    block.updateShape_()
-
                     createValueInput(block, "showExplosionText", data.args[1])
                 }
                 break
@@ -654,7 +651,8 @@ function createValueInput(parent, inputName, value) {
 
     if (!child) return
 
-    if (Array.isArray(parent.optionalInputs_) && !parent.optionalInputs_.includes(inputName)) {
+    parent.optionalInputs_ ??= []
+    if (parent.optionalInputs_.includes(inputName) === false) {
         parent.optionalInputs_.push(inputName)
         parent.updateShape_()
     }
