@@ -545,7 +545,7 @@ function compile(block) {
                     kind: "ExplodeCherryBomb",
                     lnc: compile(block.getInputTargetBlock("lnc")),
                     damage: compile(block.getInputTargetBlock("damage")),
-                    showExplosionText: showExplosionText ? showExplosionText === "TRUE" : null,
+                    showExplosionText: compile(block.getInputTargetBlock("showExplosionText")),
                     color: compile(block.getInputTargetBlock("color")),
                     scale: compile(block.getInputTargetBlock("scale")),
                     explosionWidth: compile(block.getInputTargetBlock("explosionWidth")),
