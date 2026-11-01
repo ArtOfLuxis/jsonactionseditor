@@ -1,0 +1,16 @@
+
+#output,
+#output code {
+    font-size: 16px;
+    line-height: 1.25;
+}
+
+#output {
+    flex: 1;
+    overflow: auto;
+    padding: 4px;
+    margin-bottom: 4px;
+    background: #1e1e1e;
+    color: white;
+    border: 1px solid #3c3c3c;
+}

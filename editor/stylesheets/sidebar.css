@@ -1,0 +1,157 @@
+
+#sidebar {
+    position: relative;
+    width: 420px;
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 10px;
+    box-sizing: border-box;
+
+    background: #252526;
+    color: white;
+    border-left: 1px solid #3c3c3c;
+    z-index: 100;
+}
+
+#sidebarResizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 100%;
+    cursor: ew-resize;
+    user-select: none;
+}
+
+.compileRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+#compileBtn {
+    padding: 8px 12px;
+    font-size: 16px;
+    background: #32aa30;
+    color: white;
+    cursor: pointer;
+    border: 3px solid #2e6b20;
+    font-family: "Comic Sans MS", "Comic Sans", sans-serif;
+}
+
+#compileBtn:hover {
+    background: #74c451;
+    border: 3px solid #31811f;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: white;
+    user-select: none;
+}
+
+h3 {
+    margin: 4px 0;
+}
+
+#log {
+    height: 180px;
+    overflow-y: auto;
+    padding: 4px;
+    margin-top: 3px;
+    background: #1e1e1e;
+    color: white;
+    border: 1px solid #3c3c3c;
+}
+
+.buttonRow {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 5px;
+}
+
+.buttonRow button {
+    flex: 1;
+    background: #48a830;
+    color: white;
+    cursor: pointer;
+    border: 3px solid #2e6b20;
+    font-family: "Comic Sans MS", "Comic Sans", sans-serif;
+}
+
+.buttonRow button:hover {
+    background: #89ce5e;
+    border: 3px solid #31811f;
+}
+
+/* try to make ui mobile friendly */
+@media (max-width: 900px) {
+    #sidebar {
+        position: fixed;
+        right: 4px;
+        bottom: 4px;
+
+        width: 160px;
+        height: 220px;
+
+        border: 1px solid #3c3c3c;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px #0008;
+
+        z-index: 1000;
+        padding: 6px;
+    }
+
+    #output,
+    #sidebar h3:first-of-type {
+        display: none;
+    }
+
+    #sidebarResizer {
+        display: none;
+    }
+
+    .compileRow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+        align-items: center;
+    }
+
+    #compileBtn {
+        width: 100%;
+    }
+
+    .checkboxLabel {
+        justify-content: center;
+        font-size: 10px;
+    }
+
+    .checkboxRow {
+        display: contents;
+    }
+
+    #compileBtn,
+    .buttonRow button {
+        padding: 4px 6px;
+        font-size: 12px;
+        border-width: 2px;
+    }
+
+    #log {
+        flex: 1;
+        height: auto;
+        font-size: 10px;
+    }
+
+    .checkboxLabel {
+        font-size: 10px;
+        gap: 2px;
+    }
+}
