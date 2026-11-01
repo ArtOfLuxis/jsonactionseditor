@@ -298,6 +298,8 @@ function createValueBlock(value, workspace) {
                 return block
             }
 
+            case "MathRound":
+            case "MathRoundNumber": {
                 const block = newBlock("math_round", workspace)
 
                 createValueInput(block, "rounding", value.rounding)
